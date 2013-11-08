@@ -229,10 +229,14 @@ def many_run(k, runcounter=0, logname='testrun.log'):
 
   i = 0
   while (i<k):
-    AStest("AStest"+str(runcounter)+".log")
-    ARRStest("ARRStest"+str(runcounter)+".log")
-    ARtest("ARtest"+str(runcounter)+".log")
-    RStest("RStest"+str(runcounter)+".log")
+    #AStest("AStest"+str(runcounter)+".log")
+    SAtest("SAtest"+str(runcounter)+".log")
+    #ARRStest("ARRStest"+str(runcounter)+".log")
+    SRRAtest("SRRAtest"+str(runcounter)+".log")
+    #ARtest("ARtest"+str(runcounter)+".log")
+    RAtest("RAtest"+str(runcounter)+".log")
+    #RStest("RStest"+str(runcounter)+".log")
+    SRtest("SRtest"+str(runcounter)+".log")
 
     i+=1
     time.sleep(2.0)
