@@ -1,7 +1,12 @@
 #!/bin/bash
 
-mv testlogs/*test*.log bandwidth_tests/
+foldername='testlogs/bandwidth_tests4'
+echo $foldername
 
-sshpass -p h0m3n3t scp root@192.168.142.1:/tmp/*test*.log bandwidth_tests/
+mkdir -p $foldername
 
-scp -r bandwidth_tests sarthak@riverside.noise.gatech.edu:Work/connection_performance/
+sshpass -p h0m3n3t scp root@192.168.142.1:testlogs/*test*.log $foldername
+
+mv testlogs/*test4.log $foldername
+
+#scp -r $foldername sarthak@riverside.noise.gatech.edu:Work/connection_performance/testlogs/

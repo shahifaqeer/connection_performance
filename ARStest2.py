@@ -11,7 +11,10 @@ router_key_string = 'AAAAB3NzaC1yc2EAAAADAQABAAAAgnH5yk05kTGEaPMDxr61H76uO8TkGKs
 #server_options
 server_user = 'gtnoise'
 server_pass = 'gtnoise'
-server_ip = '192.168.142.115'
+#server_ip = '192.168.142.115'
+server_ip = '192.168.1.1'
+router_ip = '192.168.142.1'
+myAddress = '192.168.142.184'
 
 #bismark router ssh parameters to authenticate
 router = paramiko.SSHClient()
@@ -69,7 +72,7 @@ def remoteTraceroute(serverAddress, logname):
   return
 
 def localIperfServer(port):
-  subprocess.check_output(['iperf', '-s', ' -p', str(port)])
+  subprocess.check_output(['iperf', '-s', '-p', str(port)])
   return
 
 def monitorFlow(router, port):
@@ -106,7 +109,7 @@ def monitorFlow(router, port):
 def AStest(logname, port_num=5005):
   print "AS test \n"
   time_sleep = 3.0 #seconds
-  serverAddress = '192.168.142.115'
+  serverAddress = server_ip
   output1 = localIperfClient(serverAddress, port_num)
   print 'local iperf client ' + output1
 
@@ -122,7 +125,7 @@ def AStest(logname, port_num=5005):
 def ARtest(logname, port_num=5004):
   print "AR test \n"
   time_sleep = 3.0 #seconds
-  serverAddress = '192.168.142.1'
+  serverAddress = router_ip
   output1 = localIperfClient(serverAddress, port_num)
   print 'local iperf client ' + output1
 
@@ -138,7 +141,7 @@ def ARtest(logname, port_num=5004):
 def RStest(logname, port_num=5005):
   print "RS test \n"
   time_sleep = 3.0 #seconds
-  serverAddress = '192.168.142.115'
+  serverAddress = server_ip
   remoteIperfClient(router, serverAddress, port_num, logname)
 
   time.sleep(time_sleep)
@@ -150,8 +153,8 @@ def RStest(logname, port_num=5005):
 def ARRStest(logname, port_num1=5004, port_num2=5005):
   print "AR + RS test \n"
   time_sleep = 3.0 #seconds
-  serverAddress = '192.168.142.115'
-  routerAddress = '192.168.142.1'
+  serverAddress = server_ip
+  routerAddress = router_ip
 
   # RS
   remoteIperfClient(router, serverAddress, port_num2, "R_"+logname)
@@ -204,7 +207,6 @@ def SRtest(logname, port_num=5004):
 def SRRAtest(logname, port_num1=5006, port_num2=5004):
   print "AR + RS test \n"
   time_sleep = 3.0 #seconds
-  myAddress = '192.168.142.184'
   routerAddress = '192.168.142.1'
   # SR
   remoteIperfClient(server, routerAddress, port_num2, 'dw_S_'+logname)
@@ -221,22 +223,22 @@ def many_run(k, runcounter=0, logname='testrun.log'):
   check_connect(router)
   check_connect(server)
 
-  print "open servers on router and server at port 5004 and 5005"
+  print "remember to open servers on router and server at port 5004 and 5005"
 
-  remoteIperfServer(router, 5004)
-  remoteIperfServer(server, 5005)
-  localIperfServer(5006)
+  #remoteIperfServer(router, 5004)
+  #remoteIperfServer(server, 5005)
+  ##localIperfServer(5006)
 
   i = 0
   while (i<k):
-    #AStest("AStest"+str(runcounter)+".log")
-    SAtest("SAtest"+str(runcounter)+".log")
-    #ARRStest("ARRStest"+str(runcounter)+".log")
-    SRRAtest("SRRAtest"+str(runcounter)+".log")
-    #ARtest("ARtest"+str(runcounter)+".log")
-    RAtest("RAtest"+str(runcounter)+".log")
-    #RStest("RStest"+str(runcounter)+".log")
-    SRtest("SRtest"+str(runcounter)+".log")
+    AStest("AStest"+str(runcounter)+".log")
+    #SAtest("SAtest"+str(runcounter)+".log")
+    ARRStest("ARRStest"+str(runcounter)+".log")
+    #SRRAtest("SRRAtest"+str(runcounter)+".log")
+    ARtest("ARtest"+str(runcounter)+".log")
+    #RAtest("RAtest"+str(runcounter)+".log")
+    RStest("RStest"+str(runcounter)+".log")
+    #SRtest("SRtest"+str(runcounter)+".log")
 
     i+=1
     time.sleep(2.0)
