@@ -1,6 +1,7 @@
-time_sleep = 1.0 #seconds
+time_sleep = 10.0 #seconds
 
 A_ip = '192.168.142.184'
+#A_ip = '127.0.0.1'
 A_port = 5006
 
 #router R options
@@ -13,6 +14,7 @@ R_key_string = 'AAAAB3NzaC1yc2EAAAADAQABAAAAgnH5yk05kTGEaPMDxr61H76uO8TkGKsBZcJB
 B_user = 'gtnoise'
 B_pass = 'gtnoise'
 B_ip = '192.168.142.158'
+#B_ip = '127.0.0.1'
 B_port = 5005
 
 #server S options

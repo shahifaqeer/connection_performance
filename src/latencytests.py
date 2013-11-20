@@ -2,55 +2,46 @@ from utilfunctions import *
 from constants import *
 
 
-def ABping(logname, ipaddr, port_num):
+def ABping(logname, ipaddr, cnt):
   """local A to remote B (server or router)"""
   print "AB test \n"
 
-  output1 = localIperfClient(ipaddr, port_num)
+  output1 = localPing(ipaddr, cnt)
   print 'local ping client ' + output1
-  saveOutput('ping_'+logname)
+  saveOutput('ping_'+logname, output1)
   return
 
-def BAping(logname, ipaddr, port_num, remote):
+def BAping(remote, logname, ipaddr, cnt):
   """Remote B (server or router) to local A server"""
   print "BA test \n"
-  remoteIperfClient(remote, ipaddr, port_num, "ping_"+logname)
+  remotePing(remote, ipaddr, "ping_"+logname, cnt)
 
   print "please check testlogs/ping_"+logname+" on the remote client"
   return
 
-def RBping(logname, ipaddr, port_num, remote):
-  """Remote client and remote listener
-  ipaddr, port_num: listener IP:PORT
-  remote: client"""
-  print "RB/BR test \n"
-  remoteIperfClient(remote, ipaddr, port_num, "ping_"+logname)
 
-  print "please check testlogs/ping_"+logname+" on the remote client"
-  return
-
-def ARRBping(logname, ipaddr1, port_num1, ipaddr2, port_num2, remote):
-  """ipaddr1, port_num1 are server/B as listener
-  remote is router
-  ipaddr2, port_num2 are router as listener"""
+def ARRBping(logname, ipaddr1, cnt1, ipaddr2, cnt2, remote):
+  #ipaddr1 is server/B as listener
+  #remote is router
+  #ipaddr2 is router/R as listener
 
   print "AR + RB test \n"
 
   # RS ipaddr1, port_num1 are IPaddress and iperf port on server, remote is router
-  RBtest("R_"+logname, ipaddr1, port_num1, remote)
+  BAping(remote, "R_"+logname, ipaddr1, cnt1)
   # AR ipaddr2, port_num2 are IPaddress and iperf port on router
-  ABtest("A_"+logname, ipaddr2, port_num2)
+  ABping("A_"+logname, ipaddr2, cnt2)
 
   return
 
-def BRRAping(logname, ipaddr2, port_num2, ipaddr3, port_num3, remote1, remote2):
-  """ipaddr2, port_num2: R as listener; remote1: B as sender
-  ipaddr3, port_num3: A as listener; remote2: R as sender"""
+def BRRAping(logname, ipaddr2, cnt2, ipaddr3, cnt3, remote1, remote2):
+  #ipaddr2, cnt2: R as listener; remote1: B as sender
+  #ipaddr3, cnt3: A as listener; remote2: R as sender
   print "AR + RS test \n"
 
-  # SR
-  RBtest("B_"+logname, ipaddr2, port_num2, remote1)
+  # SR ipaddr1, port_num1 are IPaddress and iperf port on server, remote is router
+  BAping(remote1, "B_"+logname, ipaddr2, cnt2)
   # RA
-  RBtest("R_"+logname, ipaddr3, port_num3, remote2)
+  BAping(remote2, "R_"+logname, ipaddr3, cnt3)
 
   return

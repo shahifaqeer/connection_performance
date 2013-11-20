@@ -28,11 +28,11 @@ def check_connect(serv):
   return
 
 #don't use this. instead open remote server yourself.
-def remoteIperfServer(serv, port):
-  cmd = 'iperf -s -p ' + str(port) + ' &'
-  stdin, stdout, stderr = serv.exec_command(cmd)
-  print 'iperf-server is running'
-  return
+#def remoteIperfServer(serv, port):
+#  cmd = 'iperf -s -p ' + str(port) + ' &'
+#  stdin, stdout, stderr = serv.exec_command(cmd)
+#  print 'iperf-server is running'
+#  return
 
 #might need to use this for sync issues
 def remoteIperfClient(serv, serverAddress, port, logname):
@@ -47,9 +47,9 @@ def localIperfClient(serverAddress, port):
   return output
 
 #no need to use this
-def localIperfServer(port):
-  subprocess.check_output(['iperf', '-s', '-p', str(port)])
-  return
+#def localIperfServer(port):
+#  subprocess.check_output(['iperf', '-s', '-p', str(port)])
+#  return
 
 #use this for output
 def localTraceroute(dst):
@@ -58,24 +58,24 @@ def localTraceroute(dst):
 
 #use this for output
 def localPing(dst, cnt=30):
-  output = subprocess.check_output(['ping', dst, '-c', cnt ])
+  output = subprocess.check_output(['ping', dst, '-c', str(cnt) ])
   return output
 
 #similar to remote iperf.
-def remoteTraceroute(serverAddress, logname):
-  cmd = 'traceroute ' +str(serverAddress)+' >> testlogs/'+logname+' &'
-  stdin, stdout, stderr = serv.exec_command(cmd)
+def remoteTraceroute(dst, logname, remote):
+  cmd = 'traceroute ' +str(dst)+' >> testlogs/'+logname+' &'
+  stdin, stdout, stderr = remote.exec_command(cmd)
   print 'remote traceroute running'
   return
 
 #similar to remote iperf.
-def remotePing(serverAddress, logname, cnt=30):
-  cmd = 'ping ' +str(serverAddress)+' -c' + str(cnt) + ' >> testlogs/'+logname+' &'
-  stdin, stdout, stderr = serv.exec_command(cmd)
+def remotePing(remote, dst, logname, cnt=30):
+  cmd = 'ping ' +str(dst)+' -c' + str(cnt) + ' >> testlogs/'+logname+' &'
+  stdin, stdout, stderr = remote.exec_command(cmd)
   print 'remote ping running'
+  return
 
-def saveOutput(logname):
-  final_output = output1
+def saveOutput(logname, final_output):
   f = open('testlogs/'+logname, 'a+w')
   f.write(final_output)
   f.close()
