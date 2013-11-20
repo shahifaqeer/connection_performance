@@ -29,3 +29,8 @@ Client
 -r, --tradeoff           Do a bidirectional test individually
 -L, --listenport #       port to receive bidirectional tests back on
 
+TESTS:
+10: normal iperf (20) and ping (20)
+11: on top of microwave iperf (10) and ping (10) -- problem with microwave ended prematurely
+12: iperf udp stream going from riverside through router to mugen and vice versa (-d flag)
+

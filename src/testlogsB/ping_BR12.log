@@ -1,0 +1,144 @@
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=130 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=135 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=126 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9012ms
+rtt min/avg/max/mdev = 125.575/128.824/135.779/2.830 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=133 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=125 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9012ms
+rtt min/avg/max/mdev = 125.471/128.280/133.875/2.467 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=126 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=124 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=126 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 8 received, 20% packet loss, time 9023ms
+rtt min/avg/max/mdev = 124.738/127.593/131.707/2.425 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=134 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=129 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=130 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=127 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 8 received, 20% packet loss, time 9019ms
+rtt min/avg/max/mdev = 125.212/129.093/134.552/2.947 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=126 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=124 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=129 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=124 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=135 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=131 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=130 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9011ms
+rtt min/avg/max/mdev = 124.947/128.517/135.207/3.123 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=132 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=124 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=137 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=128 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=127 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=125 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=126 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=124 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 8 received, 20% packet loss, time 9025ms
+rtt min/avg/max/mdev = 124.756/128.484/137.284/4.119 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=1.02 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=0.811 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=1.02 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9008ms
+rtt min/avg/max/mdev = 0.811/0.992/1.025/0.060 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=1.24 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=0.987 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=0.987 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=1.02 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=0.793 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=0.999 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9010ms
+rtt min/avg/max/mdev = 0.793/1.006/1.249/0.108 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=1.14 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=0.999 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=1.02 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=1.01 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=1.01 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9011ms
+rtt min/avg/max/mdev = 0.999/1.022/1.145/0.059 ms
+PING 192.168.142.1 (192.168.142.1) 56(84) bytes of data.
+64 bytes from 192.168.142.1: icmp_req=1 ttl=64 time=1.15 ms
+64 bytes from 192.168.142.1: icmp_req=2 ttl=64 time=1.02 ms
+64 bytes from 192.168.142.1: icmp_req=3 ttl=64 time=1.03 ms
+64 bytes from 192.168.142.1: icmp_req=4 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=5 ttl=64 time=0.963 ms
+64 bytes from 192.168.142.1: icmp_req=6 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=7 ttl=64 time=0.989 ms
+64 bytes from 192.168.142.1: icmp_req=8 ttl=64 time=1.00 ms
+64 bytes from 192.168.142.1: icmp_req=9 ttl=64 time=1.03 ms
+64 bytes from 192.168.142.1: icmp_req=10 ttl=64 time=1.00 ms
+
+--- 192.168.142.1 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9010ms
+rtt min/avg/max/mdev = 0.963/1.021/1.158/0.053 ms
