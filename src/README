@@ -1,0 +1,3 @@
+Controller should be a machine which can see everyone clearly and is on wired interface.
+Best will be to have a separate control plane network on wired to every device.
+But if we can't do that, just use C (wired client) as controller for now.
