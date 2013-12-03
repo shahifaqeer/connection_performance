@@ -1,0 +1,141 @@
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=134.414 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=123.506 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=124.137 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=132.730 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=119.259 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=121.594 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=119.463 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 7 packets received, 30% packet loss
+round-trip min/avg/max = 119.259/125.014/134.414 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=123.343 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=124.759 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=121.732 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=125.113 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=121.881 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=127.472 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=126.054 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=122.839 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=118.326 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=126.063 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 118.326/123.758/127.472 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=114.684 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=121.018 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=119.374 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=121.297 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=124.832 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=118.792 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=122.587 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=121.889 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 8 packets received, 20% packet loss
+round-trip min/avg/max = 114.684/120.559/124.832 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=124.866 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=120.596 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=119.585 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=124.146 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=121.549 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=124.723 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=119.946 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=121.114 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=121.602 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=122.164 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 119.585/122.029/124.866 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=142.120 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=123.419 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=122.441 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=127.068 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=120.120 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=124.139 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=118.128 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=121.945 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 8 packets received, 20% packet loss
+round-trip min/avg/max = 118.128/124.922/142.120 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=122.695 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=125.661 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=124.657 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=119.388 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=123.318 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=121.305 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=122.824 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=130.189 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 8 packets received, 20% packet loss
+round-trip min/avg/max = 119.388/123.754/130.189 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=1.128 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=1.078 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=1.040 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=1.086 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=1.091 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=1.093 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=1.071 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=1.089 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=1.066 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=1.489 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 1.040/1.123/1.489 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=1.142 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=1.076 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=1.234 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=1.086 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=0.995 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=1.088 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=1.084 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=1.205 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=1.077 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=1.033 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 0.995/1.102/1.234 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=1.300 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=1.054 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=1.094 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=0.992 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=1.068 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=1.067 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=1.013 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=1.069 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=1.003 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=1.072 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 0.992/1.073/1.300 ms
+PING 192.168.142.184 (192.168.142.184): 56 data bytes
+64 bytes from 192.168.142.184: seq=0 ttl=64 time=1.622 ms
+64 bytes from 192.168.142.184: seq=1 ttl=64 time=1.090 ms
+64 bytes from 192.168.142.184: seq=2 ttl=64 time=1.243 ms
+64 bytes from 192.168.142.184: seq=3 ttl=64 time=1.179 ms
+64 bytes from 192.168.142.184: seq=4 ttl=64 time=1.075 ms
+64 bytes from 192.168.142.184: seq=5 ttl=64 time=0.986 ms
+64 bytes from 192.168.142.184: seq=6 ttl=64 time=1.081 ms
+64 bytes from 192.168.142.184: seq=7 ttl=64 time=1.081 ms
+64 bytes from 192.168.142.184: seq=8 ttl=64 time=1.088 ms
+64 bytes from 192.168.142.184: seq=9 ttl=64 time=1.092 ms
+
+--- 192.168.142.184 ping statistics ---
+10 packets transmitted, 10 packets received, 0% packet loss
+round-trip min/avg/max = 0.986/1.153/1.622 ms
