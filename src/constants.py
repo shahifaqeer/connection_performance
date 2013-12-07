@@ -1,5 +1,6 @@
 time_sleep = 10.0 #seconds
 
+# connect to localhost for local commands
 #server S options
 S_user = 'gnoise'
 S_pass = 'gtnoise'
