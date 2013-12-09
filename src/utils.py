@@ -34,13 +34,16 @@ class RemoteHost:
       print 'check host: ' + line.strip('\n')
     return
 
-  def remoteCommand(self, cmd, logfilename=None):
+  def remoteCommand(self, cmd, logfilename=None, background=0):
     """This should be used for starting iperf servers, pings,
     tcpdumps, etc.
 
     Commands issued here can be killed by cmd = 'killall <cmd>'"""
     if logfilename:
-      cmd = cmd + ' >> testlogs/' + logfilename + ' &'
+      cmd = cmd + ' >> testlogs/' + logfilename
+    if (background):
+      cmd = cmd + ' &'
+
     stdin, stdout, stderr = self.host.exec_command(cmd)
     self.logcmd(cmd)
     return
@@ -55,9 +58,35 @@ class RemoteHost:
 
   def startIperfServer(self):
     if self.name == 'S':
-      self.remoteCommand('ipef -s -p ')
+      # self.remoteCommand('ipef -s -p ')
+      # TODO
+      pass
+    return
 
-# specific functions
+  def startIperfClient(self, server, proto='tcp', bwlim=0, reverse=0):
+    """(server, proto, bwlim) where server is a RemoteHost object, proto
+    is 'udp' or 'tcp' (default) and bwlim is a num is M"""
+
+    if proto == 'udp':
+      cmd = 'iperf -p '+str(server.udp_port)+ ' -c '+str(server.ip)+' -u -b '+str(bwlim)+'M -y C -f B -i 1 '
+      logfilename = 'iperf_'+self.name+server.name+'_'+proto+str(bwlim)+'.log'
+    else:
+      cmd = 'iperf -p '+str(server.tcp_port)+ ' -c '+str(server.ip)+' -y C -f B -i 1 '
+      logfilename = 'iperf_'+self.name+server.name+'.log'
+
+    if (reverse):
+      cmd = cmd + ' -r'
+
+    self.remoteCommand(cmd, logfilename)
+    return
+
+  # log function
+  def logcmd(self, cmd):
+    self.fileout.write(self.name + ': ' + str(time.time()) +': '+ cmd + '\n')
+    print self.name + ': ' + str(time.time()) +': '+ cmd + '\n'
+    return
+
+  # specific functions
   def createDataLogDir(self):
     """a server function only"""
     if self.name == 'S':
@@ -69,9 +98,5 @@ class RemoteHost:
     """Transfer all logfiles to homenetworklab/data/<DATE>/"""
     # TODO
     pass
-    return
-
-  def logcmd(self, cmd):
-    self.fileout.write(self.name + ':' + str(time.time()) +': '+ cmd + '\n')
     return
 
