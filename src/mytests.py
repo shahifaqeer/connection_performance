@@ -76,7 +76,7 @@ class MyTestSuite():
     time.sleep(time_sleep)
     return
 
-  def clearAllHosts():
+  def clearAllHosts(self):
     for host in self.serverList:
       host.allClear()
     return
