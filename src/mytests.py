@@ -4,11 +4,11 @@ from constants import *
 class MyTestSuite:
   def __init__(self):
     # connect ALL hosts
-    self.A = RemoteHost(A_ip, A_user, A_pass, A_port, A_udp)
-    self.B = RemoteHost(B_ip, B_user, B_pass, B_port, B_udp)
-    self.C = RemoteHost(C_ip, C_user, C_pass, C_port, C_udp)
-    self.R = RemoteHost(R_ip, R_user, R_pass, R_port, R_udp)
-    self.S = RemoteHost(S_ip, S_user, S_pass, S_port, S_udp)
+    self.A = RemoteHost(A_ip, A_user, A_pass, A_port, A_udp, 'A')
+    self.B = RemoteHost(B_ip, B_user, B_pass, B_port, B_udp, 'B')
+    self.C = RemoteHost(C_ip, C_user, C_pass, C_port, C_udp, 'C')
+    self.R = RemoteHost(R_ip, R_user, R_pass, R_port, R_udp, 'R')
+    self.S = RemoteHost(S_ip, S_user, S_pass, S_port, S_udp, 'S')
     self.BWLIST = [50,100,150,200,500,600]
     self.serverList = [self.A, self.B, self.C, self.R, self.S]
 
