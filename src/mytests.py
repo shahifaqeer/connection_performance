@@ -52,9 +52,8 @@ class MyTestSuite():
       if server.name != 'R':
         self.R.startIperfClient(server)
         time.sleep(time_sleep)
-    if server.name != 'S':
-      self.S.startIperfClient(self.R)
-      time.sleep(time_sleep)
+    self.S.startIperfClient(self.R)
+    time.sleep(time_sleep)
     return
 
   def startIperfShuffleUDP(self):
@@ -73,9 +72,8 @@ class MyTestSuite():
         if server.name != 'R':
           self.R.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-      if server.name != 'S':
-        self.S.startIperfClient(self.R, 'udp', bw)
-        time.sleep(time_sleep)
+    self.S.startIperfClient(self.R, 'udp', bw)
+    time.sleep(time_sleep)
     return
 
   def clearAllHosts():
