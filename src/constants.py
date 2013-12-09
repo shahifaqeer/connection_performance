@@ -3,7 +3,7 @@ time_sleep = 10.0 #seconds
 # connect to localhost for local commands
 
 #server S options
-S_user = 'gnoise'
+S_user = 'gtnoise'
 S_pass = 'gtnoise'
 S_ip = '192.168.20.1' #'130.207.97.74'
 S_port = 5005
