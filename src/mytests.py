@@ -64,16 +64,16 @@ class MyTestSuite():
         if server.name != 'A':
           self.A.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-        if server.name != 'A':
+        if server.name != 'B':
           self.B.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-        if server.name != 'A':
+        if server.name != 'C':
           self.C.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-        if server.name != 'A':
+        if server.name != 'R':
           self.R.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-      if server.name != 'A':
+      if server.name != 'S':
         self.S.startIperfClient(self.R, 'udp', bw)
         time.sleep(time_sleep)
     return
