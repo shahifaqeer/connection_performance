@@ -1,6 +1,6 @@
 import paramiko
-from collections import defaultdict
-from constants import *
+#from collections import defaultdict
+#from constants import *
 import time
 
 # local server ssh parameters to authenticate
@@ -19,6 +19,8 @@ class RemoteHost:
 
     self.host = self.connectHost(ip, user, passwd)
 
+    self.fileout = open('logcmd.log', 'a+w')
+
   def connectHost(self, ip, user, passwd):
     host = paramiko.SSHClient()
     host.load_system_host_keys()
@@ -32,7 +34,7 @@ class RemoteHost:
       print 'check host: ' + line.strip('\n')
     return
 
-  def remoteCommand(self, cmd, logfilename):
+  def remoteCommand(self, cmd, logfilename=None):
     """This should be used for starting iperf servers, pings,
     tcpdumps, etc.
 
@@ -44,7 +46,7 @@ class RemoteHost:
     return
 
   def startPingAll(self):
-    self.remoteCommand('sh Browserlab/pings/pingall.sh &')
+    self.remoteCommand('sh Browserlab/pings/pingall.sh "' + self.name + '" &')
     return
 
   def stopPingAll(self):
@@ -68,3 +70,8 @@ class RemoteHost:
     # TODO
     pass
     return
+
+  def logcmd(self, cmd):
+    self.fileout.write(self.name + ':' + str(time.time()) +': '+ cmd + '\n')
+    return
+
