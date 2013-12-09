@@ -19,7 +19,7 @@ R_udp = 6004
 # C : hnl-nuc1
 C_user = 'gtnoise'
 C_pass = 'gtnoise'
-C_ip = '192.168.10.158'
+C_ip = '192.168.10.142'
 C_port = 5003
 C_udp = 6003
 
@@ -33,6 +33,6 @@ B_udp = 6002
 # A : hnl1
 A_user = 'gtnoise'
 A_pass = 'gtnoise'
-A_ip = '192.168.10.184' #192.168.10.149
+A_ip = '192.168.10.184' # '192.168.10.149'
 A_port = 5001
 A_udp = 6001
