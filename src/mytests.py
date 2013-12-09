@@ -83,20 +83,22 @@ class MyTestSuite():
     # transfer for clients A, B, C
     for remotehost in [self.A, self.B, self.C]:
       remotedstdir = self.S.user+'@'+self.S.ip+':data/'+dst+'/'
-      self.remotehost.remoteLogTransfer('Browserlab/pings/*.log', remotedstdir)
-      self.remotehost.remoteLogTransfer('testlogs/*.log', remotedstdir)
+      remotehost.remoteLogTransfer('Browserlab/pings/*.log', remotedstdir)
+      remotehost.remoteLogTransfer('testlogs/*.log', remotedstdir)
+
     # transfer for R
     remotesrcdir = self.R.user+'@'+self.R.ip+':Browserlab/pings/*.log'
     dstdir = 'data/'+dst+'/'
     self.S.remoteLogTransfer(remotesrcdir, dstdir)
     remotesrcdir = self.R.user+'@'+self.R.ip+':testlogs/*.log'
     self.S.remoteLogTransfer(remotesrcdir, dstdir)
+
     # transfer for S
     srcdir = 'Browserlab/pings/*.log'
     dstdir = 'data/'+dst+'/'
-    self.S.remoteCommand('cp '+srcdir+' '+dstdir)
+    self.S.remoteLogTransfer(srcdir, dstdir)
     srcdir = 'testlogs/*.log'
-    self.S.remoteCommand('cp '+srcdir+' '+dstdir)
+    self.S.remoteLogTransfer(srcdir, dstdir)
 
     # clear all logs
     self.clearAllHosts()
