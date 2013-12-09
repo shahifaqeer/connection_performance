@@ -1,4 +1,4 @@
-time_sleep = 10.0 #seconds
+time_sleep = 11.0 #seconds
 
 # connect to localhost for local commands
 

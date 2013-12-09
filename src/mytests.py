@@ -1,5 +1,6 @@
 from utils import RemoteHost
 from constants import *
+import time
 
 class MyTestSuite():
   def __init__(self):
@@ -40,10 +41,15 @@ class MyTestSuite():
     # testsuite iperf tcp
     for server in self.serverList:
       self.A.startIperfClient(server)
+      time.sleep(time_sleep)
       self.B.startIperfClient(server)
+      time.sleep(time_sleep)
       self.C.startIperfClient(server)
+      time.sleep(time_sleep)
       self.R.startIperfClient(server)
+      time.sleep(time_sleep)
     self.S.startIperfClient(self.R)
+    time.sleep(time_sleep)
     return
 
   def startIperfShuffleUDP(self):
