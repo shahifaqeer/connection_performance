@@ -114,20 +114,18 @@ def TCPTest(testsuite, counter):
   # counter around 50
   k = 0
   while k<counter:
-    print 'TCP Round '+str(k)
+    print time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), 'TCP Round '+str(k)
     testsuite.startIperfShuffleTCP()
     k += 1
-  # TODO copy iperf tcp files to server
   return
 
 def UDPTest(testsuite, counter):
   # counter should be something like 10
   k = 0
   while k<counter:
-    print 'UDP Round '+str(k)
+    print time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), 'UDP Round '+str(k)
     testsuite.startIperfShuffleUDP()
     k += 1
-  # TODO copy iperf udp files to server
   return
 
 def bandwidthTest(ctr_tcp, ctr_udp):
@@ -141,6 +139,6 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   print "iperf UDP x "+str(ctr_udp)
   mts.stopAllPings()
   print "stop pings"
-  print "\n DONE"
+  print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
   return mts
 
