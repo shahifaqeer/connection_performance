@@ -78,3 +78,37 @@ class MyTestSuite():
         time.sleep(time_sleep)
     return
 
+  def clearAllHosts():
+    for host in self.serverList:
+      host.allClear()
+    return
+
+def TCPTest(testsuite, counter):
+  # counter around 50
+  k = 0
+  while k<=counter:
+    testsuite.startIperfShuffleTCP()
+  # TODO copy iperf tcp files to server
+  return
+
+def UDPTest(testsuite, counter):
+  # counter should be something like 10
+  k = 0
+  while k<=counter:
+    testsuite.startIperfShuffleUDP()
+  # TODO copy iperf udp files to server
+  return
+
+def bandwidthTest(ctr_tcp, ctr_udp):
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+  mts.startAllPings()
+  print "start pings"
+  TCPTest(mts, ctr_tcp)
+  print "iperf TCP x "+str(ctr_tcp)
+  UDPTest(mts, ctr_udp)
+  print "iperf UDP x "+str(ctr_udp)
+  mts.stopAllPings()
+  print "stop pings"
+  print "\n DONE"
+

@@ -93,6 +93,11 @@ class RemoteHost:
     print self.name + ': ' + str(time.time()) +': '+ cmd + '\n'
     return
 
+  def allClear(self):
+    self.remoteCommand('rm Browserlab/pings/*.log')
+    self.remoteCommand('rm testlogs/*')
+    return
+
   # specific functions
   def createDataLogDir(self):
     """a server function only"""
