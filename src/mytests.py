@@ -87,7 +87,7 @@ def TCPTest(testsuite, counter):
   # counter around 50
   k = 0
   while k<counter:
-    print 'TCP Round '+k
+    print 'TCP Round '+str(k)
     testsuite.startIperfShuffleTCP()
     k += 1
   # TODO copy iperf tcp files to server
@@ -97,7 +97,7 @@ def UDPTest(testsuite, counter):
   # counter should be something like 10
   k = 0
   while k<counter:
-    print 'UDP Round '+k
+    print 'UDP Round '+str(k)
     testsuite.startIperfShuffleUDP()
     k += 1
   # TODO copy iperf udp files to server
