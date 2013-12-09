@@ -83,22 +83,19 @@ class MyTestSuite():
     # transfer for clients A, B, C
     for remotehost in [self.A, self.B, self.C]:
       remotedstdir = self.S.user+'@'+self.S.ip+':data/'+dst+'/'
-      remotehost.remoteLogTransfer('Browserlab/pings/*.log', remotedstdir)
-      remotehost.remoteLogTransfer('testlogs/*.log', remotedstdir)
+      remotehost.remoteCommand('scp Browserlab/pings/*.log ' + remotedstdir)
+      remotehost.remoteCommand('scp testlogs/*.log ' + remotedstdir)
 
+    dstdir = 'data/'+dst+'/'
     # transfer for R
     remotesrcdir = self.R.user+'@'+self.R.ip+':Browserlab/pings/*.log'
-    dstdir = 'data/'+dst+'/'
-    self.S.remoteLogTransfer(remotesrcdir, dstdir)
+    self.S.remoteCommand('sshpass -p '+self.R.passwd+' ssh '+remotesrcdir+' '+dstdir)
     remotesrcdir = self.R.user+'@'+self.R.ip+':testlogs/*.log'
-    self.S.remoteLogTransfer(remotesrcdir, dstdir)
+    self.S.remoteCommand('sshpass -p '+self.R.passwd+' ssh '+remotesrcdir+' '+dstdir)
 
     # transfer for S
-    srcdir = 'Browserlab/pings/*.log'
-    dstdir = 'data/'+dst+'/'
-    self.S.remoteLogTransfer(srcdir, dstdir)
-    srcdir = 'testlogs/*.log'
-    self.S.remoteLogTransfer(srcdir, dstdir)
+    self.S.remoteCommand('cp Browserlab/pings/*.log '+dstdir)
+    self.S.remoteCommand('cp testlogs/*.log '+dstdir)
 
     # clear all logs
     self.clearAllHosts()

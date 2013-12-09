@@ -111,10 +111,7 @@ class RemoteHost:
   def remoteLogTransfer(self, srcpath, dstpath):
     """Transfer all logfiles to homenetworklab/data/<DATE>/"""
     # TODO test this function
-    if self.name != 'S':
-      self.remoteCommand('scp '+srcpath+' '+dstpath)
-    else:
-      self.remoteCommand('cp '+srcpath+' '+dstpath)
+    pass
     # sftp = self.host.open_sftp()
     # sftp.put(srcpath, dstpath)
     # sftp.close()
