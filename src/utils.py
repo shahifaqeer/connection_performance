@@ -53,7 +53,10 @@ class RemoteHost:
     return
 
   def startPingAll(self):
-    self.remoteCommand('sh Browserlab/pings/pingall.sh "' + self.name + '" &')
+    if self.name == 'R':
+      self.remoteCommand('sh Browserlab/pings/pingall.sh &')
+    else:
+      self.remoteCommand('sh Browserlab/pings/pingall.sh "' + self.name + '" &')
     return
 
   def stopPingAll(self):
