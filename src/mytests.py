@@ -40,26 +40,41 @@ class MyTestSuite():
     # TODO downlink server to client is not working. S->R only
     # testsuite iperf tcp
     for server in self.serverList:
-      self.A.startIperfClient(server)
+      if server.name != 'A':
+        self.A.startIperfClient(server)
+        time.sleep(time_sleep)
+      if server.name != 'B':
+        self.B.startIperfClient(server)
+        time.sleep(time_sleep)
+      if server.name != 'C':
+        self.C.startIperfClient(server)
+        time.sleep(time_sleep)
+      if server.name != 'R':
+        self.R.startIperfClient(server)
+        time.sleep(time_sleep)
+    if server.name != 'S':
+      self.S.startIperfClient(self.R)
       time.sleep(time_sleep)
-      self.B.startIperfClient(server)
-      time.sleep(time_sleep)
-      self.C.startIperfClient(server)
-      time.sleep(time_sleep)
-      self.R.startIperfClient(server)
-      time.sleep(time_sleep)
-    self.S.startIperfClient(self.R)
-    time.sleep(time_sleep)
     return
 
   def startIperfShuffleUDP(self):
     # testsuite iperf udp
     for bw in self.BWLIST:
       for server in self.serverList:
-        self.A.startIperfClient(server, 'udp', bw)
-        self.B.startIperfClient(server, 'udp', bw)
-        self.C.startIperfClient(server, 'udp', bw)
-        self.R.startIperfClient(server, 'udp', bw)
-      self.S.startIperfClient(self.R, 'udp', bw)
+        if server.name != 'A':
+          self.A.startIperfClient(server, 'udp', bw)
+          time.sleep(time_sleep)
+        if server.name != 'A':
+          self.B.startIperfClient(server, 'udp', bw)
+          time.sleep(time_sleep)
+        if server.name != 'A':
+          self.C.startIperfClient(server, 'udp', bw)
+          time.sleep(time_sleep)
+        if server.name != 'A':
+          self.R.startIperfClient(server, 'udp', bw)
+          time.sleep(time_sleep)
+      if server.name != 'A':
+        self.S.startIperfClient(self.R, 'udp', bw)
+        time.sleep(time_sleep)
     return
 
