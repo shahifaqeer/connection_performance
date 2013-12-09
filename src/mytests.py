@@ -72,14 +72,15 @@ class MyTestSuite():
         if server.name != 'R':
           self.R.startIperfClient(server, 'udp', bw)
           time.sleep(time_sleep)
-    self.S.startIperfClient(self.R, 'udp', bw)
-    time.sleep(time_sleep)
+      self.S.startIperfClient(self.R, 'udp', bw)
+      time.sleep(time_sleep)
     return
 
   def clearAllHosts(self):
     for host in self.serverList:
       host.allClear()
     return
+
 
 def TCPTest(testsuite, counter):
   # counter around 50
