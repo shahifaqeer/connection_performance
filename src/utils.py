@@ -17,17 +17,15 @@ class RemoteHost:
     self.tcp_port = tcp_port
     self.udp_port = udp_port
 
-    if name != 'S':
-      self.host = self.connectHost(ip, user, passwd)
-    else:
-      self.host = self.connectHost(ip)
+    self.host = self.connectHost(ip, user, passwd)
 
     self.fileout = open('logcmd.log', 'a+w')
 
-  def connectHost(self, ip, user=None, passwd=None):
+  def connectHost(self, ip, user, passw):
     host = paramiko.SSHClient()
     host.load_system_host_keys()
     host.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    print 'connect to ' + ip + ' user: ' + user + ' pass: ' + passwd
     if self.name!='S':
       host.connect(ip, username=user, password=passwd)
     else:
