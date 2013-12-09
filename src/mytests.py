@@ -98,7 +98,7 @@ class MyTestSuite():
     self.S.remoteCommand('cp testlogs/*.log '+dstdir)
 
     # clear all logs
-    self.clearAllHosts()
+    # self.clearAllHosts()
     return
 
   def clearAllHosts(self):
