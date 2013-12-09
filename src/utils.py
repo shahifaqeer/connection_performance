@@ -21,7 +21,7 @@ class RemoteHost:
 
     self.fileout = open('logcmd.log', 'a+w')
 
-  def connectHost(self, ip, user, passw):
+  def connectHost(self, ip, user, passwd):
     host = paramiko.SSHClient()
     host.load_system_host_keys()
     host.set_missing_host_key_policy(paramiko.AutoAddPolicy())
