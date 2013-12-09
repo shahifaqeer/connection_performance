@@ -89,9 +89,9 @@ class MyTestSuite():
     dstdir = 'data/'+dst+'/'
     # transfer for R
     remotesrcdir = self.R.user+'@'+self.R.ip+':Browserlab/pings/*.log'
-    self.S.remoteCommand('sshpass -p '+self.R.passwd+' ssh '+remotesrcdir+' '+dstdir)
+    self.S.remoteCommand('sshpass -p '+self.R.passwd+' scp '+remotesrcdir+' '+dstdir)
     remotesrcdir = self.R.user+'@'+self.R.ip+':testlogs/*.log'
-    self.S.remoteCommand('sshpass -p '+self.R.passwd+' ssh '+remotesrcdir+' '+dstdir)
+    self.S.remoteCommand('sshpass -p '+self.R.passwd+' scp '+remotesrcdir+' '+dstdir)
 
     # transfer for S
     self.S.remoteCommand('cp Browserlab/pings/*.log '+dstdir)
