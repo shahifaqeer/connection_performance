@@ -99,16 +99,20 @@ class RemoteHost:
     return
 
   # specific functions
-  def createDataLogDir(self):
+  def createDataLogDir(self, description=None):
     """a server function only"""
     if self.name == 'S':
-      foldername = str(time.localtimealtime()[0])+str(time.localtime()[1])+str(time.localtime()[2])
+      foldername = time.mktime(time.localtimealtime())
+      if (description):
+        foldername = foldername + '_' + description
       self.remoteCommand('mkdir -p /home/gtnoise/data/'+foldername)
-    return
+    return foldername
 
-  def remoteLogTransfer(self, srclog, dstdir):
+  def remoteLogTransfer(self, srcpath, dstpath):
     """Transfer all logfiles to homenetworklab/data/<DATE>/"""
     # TODO
-    pass
+    sftp = self.host.open_sftp()
+    sftp.put(srcpath, dstpath)
+    sftp.close()
     return
 
