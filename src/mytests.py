@@ -1,7 +1,7 @@
 from utils import RemoteHost
 from constants import *
 
-class MyTestSuite:
+class MyTestSuite():
   def __init__(self):
     # connect ALL hosts
     self.A = RemoteHost(A_ip, A_user, A_pass, A_port, A_udp, 'A')
