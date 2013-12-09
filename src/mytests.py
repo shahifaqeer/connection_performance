@@ -111,4 +111,5 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   mts.stopAllPings()
   print "stop pings"
   print "\n DONE"
+  return mts
 
