@@ -49,6 +49,9 @@ class RemoteHost:
       cmd = cmd + ' &'
 
     stdin, stdout, stderr = self.host.exec_command(cmd)
+    for line in stdout:
+      print line
+
     self.logcmd(cmd)
     return
 
