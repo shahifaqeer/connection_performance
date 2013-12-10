@@ -98,7 +98,8 @@ class RemoteHost:
 
   def allClear(self):
     self.remoteCommand('rm Browserlab/pings/*.log')
-    self.remoteCommand('rm testlogs/*')
+    self.remoteCommand('rm testlogs/*.log')
+    self.remoteCommand('rm tcpdump/*.pcap')
     return
 
   # specific functions
@@ -113,10 +114,17 @@ class RemoteHost:
 
   def remoteLogTransfer(self, srcpath, dstpath):
     """Transfer all logfiles to homenetworklab/data/<DATE>/"""
-    # TODO test this function
+    # doesn't work. use transferlogs instead
     pass
     # sftp = self.host.open_sftp()
     # sftp.put(srcpath, dstpath)
     # sftp.close()
+    return
+
+  def tcpDump(self, logfilename):
+    if self.name == 'R':
+      self.remoteCommand('tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename)
+    else:
+      self.remoteCommand('echo "gtnoise" | sudo -S -su tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename)
     return
 
