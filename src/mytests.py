@@ -1,6 +1,9 @@
+#!/usr/bin/python
+
 from utils import RemoteHost
 from constants import *
 import time
+
 
 class MyTestSuite():
   def __init__(self):
@@ -15,16 +18,9 @@ class MyTestSuite():
 
   def startIperfServer(self):
     # start ALL iperf servers (already done for now locally)
-    self.A.remoteCommand('iperf -s -w 128k -p 5001 >> /testlogs/iperf_A_tcp.log &')
-    self.A.remoteCommand('iperf -s -u -w 128k -p 6001 >> /testlogs/iperf_A_udp.log &')
-    self.B.remoteCommand('iperf -s -w 128k -p 5002 >> /testlogs/iperf_B_tcp.log &')
-    self.B.remoteCommand('iperf -s -u -w 128k -p 6002 >> /testlogs/iperf_B_udp.log &')
-    self.C.remoteCommand('iperf -s -w 128k -p 5003 >> /testlogs/iperf_C_tcp.log &')
-    self.C.remoteCommand('iperf -s -u -w 128k -p 6003 >> /testlogs/iperf_C_udp.log &')
-    self.R.remoteCommand('iperf -s -w 128k -p 5004 >> /testlogs/iperf_R_udp.log &')
-    self.R.remoteCommand('iperf -s -u -w 128k -p 6004 >> /testlogs/iperf_R_udp.log &')
-    self.S.remoteCommand('iperf -s -w 128k -p 5005 >> /testlogs/iperf_S_tcp.log &')
-    self.S.remoteCommand('iperf -s -u -w 128k -p 6005 >> /testlogs/iperf_R_udp.log &')
+    for remotehost in self.serverList:
+      remotehost.remoteCommand('iperf -s -w 128k -p '+remotehost.tcp_port+' >> /testlogs/iperf_'+remotehost.name+'_tcp.log &')
+      remotehost.remoteCommand('iperf -s -u -w 128k -p '+remotehost.udp_port+' >> /testlogs/iperf_'+remotehost.name+'_udp.log &')
     return
 
   def startAllPings(self):
@@ -45,7 +41,7 @@ class MyTestSuite():
     self.S.stopPingAll()
     return
 
-  def killAll(self, "cmd"):
+  def killAll(self, cmd):
     self.A.remoteCommand("kill "+cmd)
     self.B.remoteCommand("kill "+cmd)
     self.C.remoteCommand("kill "+cmd)
