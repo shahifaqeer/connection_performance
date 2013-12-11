@@ -19,7 +19,7 @@ class RemoteHost:
 
     self.host = self.connectHost(ip, user, passwd)
 
-    self.fileout = open('logcmd.log', 'a+w')
+    self.fileout = open('testlogs/logcmd.log', 'a+w')
 
   def connectHost(self, ip, user, passwd):
     host = paramiko.SSHClient()
