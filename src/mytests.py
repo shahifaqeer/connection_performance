@@ -19,13 +19,13 @@ class MyTestSuite():
   def startIperfTCPServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
-      remotehost.remoteCommand('iperf -s -w 128k -p '+str(remotehost.tcp_port)+' >> /testlogs/iperf_'+remotehost.name+'_tcp.log &')
+      remotehost.remoteCommand('iperf -s -w 128k -p '+str(remotehost.tcp_port), 'iperf_'+remotehost.name+'_tcp.log', 1)
     return
 
   def startIperfUDPServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
-      remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port)+' >> /testlogs/iperf_'+remotehost.name+'_udp.log &')
+      remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port), 'iperf_'+remotehost.name+'_udp.log', 1)
     return
 
   def startAllPings(self):
@@ -140,6 +140,11 @@ class MyTestSuite():
     remoteclient.remoteCommand(client_cmd+' -f B -y C ', 'iperf_'+remoteclient.name+remoteserver.name+'_cong_client.log', 1)
 
     return
+
+  def stopAllSuit(self):
+    self.stopAllPings()
+    self.killAll('tcpdump')
+    self.killAll('iperf')
 
 
 def TCPTest(testsuite, counter):
