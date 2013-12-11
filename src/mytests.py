@@ -131,11 +131,11 @@ class MyTestSuite():
     client_cmd = 'iperf -c '+remoteserver.ip+' -w 128k -i 2 -t '+testtime
 
     if proto == 'udp':
-      server_cmd = server_cmd+' -u -p '+remoteserver.udp_port
-      client_cmd = client_cmd+' -u -b '+bwlim+'M -p '+remoteserver.udp_port
+      server_cmd = server_cmd+' -u -p '+str(remoteserver.udp_port)
+      client_cmd = client_cmd+' -u -b '+bwlim+'M -p '+str(remoteserver.udp_port)
     else:
-      server_cmd = server_cmd + ' -p '+remoteserver.tcp_port
-      client_cmd = client_cmd + ' -p '+remoteserver.tcp_port
+      server_cmd = server_cmd + ' -p '+str(remoteserver.tcp_port)
+      client_cmd = client_cmd + ' -p '+str(remoteserver.tcp_port)
 
     remoteserver.remoteCommand(server_cmd+' -f B -y C ', 'iperf_'+remoteclient.name+remoteserver.name+'_cong_server.log', 1)
     remoteclient.remoteCommand(client_cmd+' -f B -y C ', 'iperf_'+remoteclient.name+remoteserver.name+'_cong_client.log', 1)
