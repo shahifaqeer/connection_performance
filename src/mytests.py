@@ -126,7 +126,7 @@ class MyTestSuite():
       remotehost.host.close()
     return
 
-  def twoHostCongestion(self,remoteclient, remoteserver, proto, testtime=10, bwlim=0):
+  def twoHostCongestion(self,remoteclient, remoteserver, proto, testtime='10', bwlim='0'):
     server_cmd = 'iperf -s -w 128k -i 2'
     client_cmd = 'iperf -c '+remoteserver.ip+' -w 128k -i 2 -t '+testtime
 
