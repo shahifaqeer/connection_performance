@@ -16,10 +16,15 @@ class MyTestSuite():
     self.BWLIST = [50,100,150,200,500,600]
     self.serverList = [self.A, self.B, self.C, self.R, self.S]
 
-  def startIperfServer(self):
+  def startIperfTCPServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
       remotehost.remoteCommand('iperf -s -w 128k -p '+str(remotehost.tcp_port)+' >> /testlogs/iperf_'+remotehost.name+'_tcp.log &')
+    return
+
+  def startIperfUDPServer(self):
+    # start ALL iperf servers (already done for now locally)
+    for remotehost in self.serverList:
       remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port)+' >> /testlogs/iperf_'+remotehost.name+'_udp.log &')
     return
 
@@ -42,11 +47,8 @@ class MyTestSuite():
     return
 
   def killAll(self, cmd):
-    self.A.remoteCommand("kill "+cmd)
-    self.B.remoteCommand("kill "+cmd)
-    self.C.remoteCommand("kill "+cmd)
-    self.R.remoteCommand("kill "+cmd)
-    self.S.remoteCommand("kill "+cmd)
+    for remotehost in self.serverList:
+      remotehost.remoteCommand("killall "+cmd)
 
   def startIperfShuffleTCP(self):
     # TODO downlink server to client is not working. S->R only
@@ -142,6 +144,7 @@ class MyTestSuite():
 
 def TCPTest(testsuite, counter):
   # counter around 50
+
   k = 0
   while k<counter:
     print time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), 'TCP Round '+str(k)
@@ -181,16 +184,20 @@ def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
   mts.twoHostCongestion(cong_host2, cong_host1, 'udp', '7001', '600', bwlim)
 
   if ctr_tcp > 0:
+    mts.startIperfTCPServer()
     TCPTest(mts, ctr_tcp)
     print "iperf TCP x "+str(ctr_tcp)
 
   if ctr_udp > 0:
+    mts.startIperfUDPServer()
     UDPTest(mts, ctr_udp)
     print "iperf UDP x "+str(ctr_udp)
 
   mts.stopAllPings()
+  mts.killAll('iperf')
+  mts.killAll('tcpdump')
 
-  print "stop pings"
+  print "stop pings, kill iperf servers, and stop tcpdump"
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
 
   return mts
