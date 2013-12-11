@@ -19,8 +19,8 @@ class MyTestSuite():
   def startIperfServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
-      remotehost.remoteCommand('iperf -s -w 128k -p '+remotehost.tcp_port+' >> /testlogs/iperf_'+remotehost.name+'_tcp.log &')
-      remotehost.remoteCommand('iperf -s -u -w 128k -p '+remotehost.udp_port+' >> /testlogs/iperf_'+remotehost.name+'_udp.log &')
+      remotehost.remoteCommand('iperf -s -w 128k -p '+str(remotehost.tcp_port)+' >> /testlogs/iperf_'+remotehost.name+'_tcp.log &')
+      remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port)+' >> /testlogs/iperf_'+remotehost.name+'_udp.log &')
     return
 
   def startAllPings(self):
