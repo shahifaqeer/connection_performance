@@ -123,8 +123,8 @@ class RemoteHost:
 
   def tcpDump(self, logfilename):
     if self.name == 'R':
-      self.remoteCommand('tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename)
+      self.remoteCommand('tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename+' &')
     else:
-      self.remoteCommand('echo "gtnoise" | sudo -S -su tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename)
+      self.remoteCommand('echo "gtnoise" | sudo -S -su tcpdump icmp -s 100 -i any -w tcpdump/'+logfilename+' &')
     return
 
