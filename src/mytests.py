@@ -171,3 +171,29 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   print "stop pings"
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
   return mts
+
+def weirdLatencyTest(ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+
+  mts.startAllPings()
+  print "start pings"
+
+  # local C->A and A-> C udp traffic
+  mts.twoHostCongestion(cong_host1, cong_host2, 'udp', '7000', '600', bwlim)
+  mts.twoHostCongestion(cong_host2, cong_host1, 'udp', '7001', '600', bwlim)
+
+  if ctr_tcp > 0:
+    TCPTest(mts, ctr_tcp)
+    print "iperf TCP x "+str(ctr_tcp)
+
+  if ctr_udp > 0:
+    UDPTest(mts, ctr_udp)
+    print "iperf UDP x "+str(ctr_udp)
+
+  mts.stopAllPings()
+
+  print "stop pings"
+  print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
+
+  return mts
