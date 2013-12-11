@@ -180,13 +180,13 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
   return mts
 
-def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
+def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, testtime, bwlim):
   mts.startAllPings()
   print "start pings"
 
   print "congestion udp traffic"
-  mts.twoHostCongestion(cong_host1, cong_host2, 'udp', '7000', '600', bwlim)
-  mts.twoHostCongestion(cong_host2, cong_host1, 'udp', '7001', '600', bwlim)
+  mts.twoHostCongestion(cong_host1, cong_host2, 'udp', '7000', testtime, bwlim)
+  mts.twoHostCongestion(cong_host2, cong_host1, 'udp', '7001', testtime, bwlim)
 
   if ctr_tcp > 0:
     mts.startIperfTCPServer()
