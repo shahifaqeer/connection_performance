@@ -126,13 +126,13 @@ class MyTestSuite():
       remotehost.host.close()
     return
 
-  def twoHostCongestion(self,remoteclient, remoteserver, proto, bwlim=0, testtime):
+  def twoHostCongestion(self,remoteclient, remoteserver, proto, testtime=10, bwlim=0):
     server_cmd = 'iperf -s -w 128k -i 2'
     client_cmd = 'iperf -c '+remoteserver.ip+' -w 128k -i 2 -t '+testtime
 
     if proto == 'udp':
       server_cmd = server_cmd+' -u -p '+remoteserver.udp_port
-      client_cmd = client_cmd+' -u -b '+bwlim+' -p '+remoteserver.udp_port
+      client_cmd = client_cmd+' -u -b '+bwlim+'M -p '+remoteserver.udp_port
     else:
       server_cmd = server_cmd + ' -p '+remoteserver.tcp_port
       client_cmd = client_cmd + ' -p '+remoteserver.tcp_port
