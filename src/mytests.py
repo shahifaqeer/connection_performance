@@ -172,10 +172,7 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
   return mts
 
-def weirdLatencyTest(ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
-  mts = MyTestSuite()
-  print "Connected to all hosts"
-
+def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
   mts.startAllPings()
   print "start pings"
 
