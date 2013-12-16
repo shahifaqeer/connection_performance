@@ -206,3 +206,16 @@ def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, bwlim):
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
 
   return mts
+
+def UDPBWTests(ctr_udp):
+  mts = MyTestSuite()
+  mts.startAllPings()
+  for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+    for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+      print (remoteclient.name + ' to ' + remoteserver.name)
+      for k in range(ctr_udp):
+        remoteclient.UDPProbeTest(remoteserver)
+        time.sleep(time_sleep)
+
+  mts.stopAllPings()
+  return
