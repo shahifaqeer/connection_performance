@@ -136,10 +136,12 @@ class RemoteHost:
     # sftp.close()
     return
 
-  def tcpDump(self, logfilename, background=0):
+  def tcpDump(self, logfilename):
     if self.name == 'R':
-      self.remoteCommand('tcpdump -s 60 -i any -w tcpdump/'+logfilename, background)
+      cmd = 'tcpdump -s 60 -i any -w tcpdump/'+logfilename
     else:
-      self.remoteCommand('echo "gtnoise" | sudo -S -su tcpdump -s 100 -i any -w tcpdump/'+logfilename, background)
+      cmd = 'echo "gtnoise" | sudo -S -su tcpdump -s 100 -i any -w tcpdump/'+logfilename
+    self.host.exec_command(cmd)
+    self.logcmd(cmd)
     return
 

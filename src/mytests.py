@@ -92,9 +92,9 @@ class MyTestSuite():
           time.sleep(time_sleep)
     return
 
-  def routerSmallTCPDump(self, k, start_ctr, stop_ctr):
+  def routerSmallTCPDump(self, remoteclient, remoteserver, k, start_ctr, stop_ctr):
     if k==start_ctr:
-      self.R.tcpDump('R_'remoteclient.name+remoteserver.name+'.pcap', 1)
+      self.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
     if k==stop_ctr:
       self.R.remoteCommand('killall tcpdump')
     return
@@ -225,7 +225,7 @@ def UDPBWTests(ctr_udp):
           remoteclient.UDPProbeTest(remoteserver)
           time.sleep(time_sleep)
           # take a tcpdump at router between round 2 and 4
-          mts.routerSmallTCPDump(k, 2, 4)
+          mts.routerSmallTCPDump(remoteclient, remoteserver, k, 2, 4)
 
   mts.stopAllPings()
   return mts
