@@ -90,6 +90,21 @@ class RemoteHost:
     self.remoteCommand(cmd, logfilename, 1)
     return
 
+  def UDPProbeTest(self, server):
+    sin, sout, serr = server.host.exec_command('udpprobeserver &')
+    cmd = 'udpprober -s '+server.ip
+    logfilename = 'udp_'+self.name+server.name+'.log'
+    sin, sout, serr = self.host.exec_command(cmd, logfilename)
+    return
+
+  def startPathLoadServer(self):
+    pass
+    return
+
+  def startPathLoadClient(self):
+    pass
+    return
+
   # log function
   def logcmd(self, cmd):
     self.fileout.write(self.name + ': ' + str(time.time()) +': '+ cmd + '\n')
