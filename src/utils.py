@@ -87,7 +87,7 @@ class RemoteHost:
     if (reverse):
       cmd = cmd + ' -r'
 
-    self.remoteCommand(cmd, logfilename)
+    self.remoteCommand(cmd, logfilename, 1)
     return
 
   def UDPProbeTest(self, server):
