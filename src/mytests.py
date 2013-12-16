@@ -92,6 +92,13 @@ class MyTestSuite():
           time.sleep(time_sleep)
     return
 
+  def routerSmallTCPDump(self, remoteclient, remoteserver, k, start_ctr, stop_ctr):
+    if k==start_ctr:
+      self.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+    if k==stop_ctr:
+      self.R.remoteCommand('killall tcpdump')
+    return
+
   def transferLogs(self, description):
     # create log directory on the server
     dst = self.S.createDataLogDir(description)
@@ -217,9 +224,8 @@ def UDPBWTests(ctr_udp):
         for k in range(ctr_udp):
           remoteclient.UDPProbeTest(remoteserver)
           time.sleep(time_sleep)
-          if k == 1:
-            mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
-
+          # take a tcpdump at router between round 2 and 4
+          mts.routerSmallTCPDump(remoteclient, remoteserver, k, 2, 4)
 
   mts.stopAllPings()
   return mts
