@@ -94,7 +94,7 @@ class RemoteHost:
     sin, sout, serr = server.host.exec_command('udpprobeserver &')
     cmd = 'udpprober -s '+server.ip
     logfilename = 'udp_'+self.name+server.name+'.log'
-    sin, sout, serr = self.host.exec_command(cmd + ' >>' + logfilename)
+    sin, sout, serr = self.remoteCommand(cmd, logfilename)
     return
 
   def startPathLoadServer(self):
