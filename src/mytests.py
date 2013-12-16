@@ -212,10 +212,11 @@ def UDPBWTests(ctr_udp):
   mts.startAllPings()
   for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
     for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
-      print (remoteclient.name + ' to ' + remoteserver.name)
-      for k in range(ctr_udp):
-        remoteclient.UDPProbeTest(remoteserver)
-        time.sleep(time_sleep)
+      if remoteserver != remoteclient:
+        print (remoteclient.name + ' to ' + remoteserver.name)
+        for k in range(ctr_udp):
+          remoteclient.UDPProbeTest(remoteserver)
+          time.sleep(time_sleep)
 
   mts.stopAllPings()
-  return
+  return mts
