@@ -145,3 +145,14 @@ class RemoteHost:
     self.logcmd(cmd)
     return
 
+  def getBitRate(self, logfilename):
+    # TODO save bitrate value every second
+    cmd = '/sbin/iw wlan0 station dump | grep bitrate'
+    sin, sout, serr = self.host.exec_command(cmd)
+    for line in sout:
+      line.split('bitrate:')[2]
+    pass
+    return
+
+
+
