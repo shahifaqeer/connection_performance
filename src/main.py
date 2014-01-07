@@ -1,4 +1,5 @@
 from mytests import MyTestSuite
+import time
 
 def TCPTest(testsuite, counter):
   # counter around 50
