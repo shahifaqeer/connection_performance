@@ -125,13 +125,19 @@ class MyTestSuite():
     self.S.remoteCommand('cp tcpdump/*.pcap '+dstdir)
 
     # clear all logs
-    # self.clearAllHosts()
+    self.clearAllHosts()
+
+    # close all connections
+    # self.closeAllHostst()
     return
 
   def clearAllHosts(self):
     for remotehost in self.serverList:
       remotehost.allClear()
-      # close all paramiko connections
+    return
+
+  def closeAllHosts(self):
+    for remotehost in self.serverList:
       remotehost.host.close()
     return
 
