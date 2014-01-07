@@ -79,20 +79,22 @@ def UDPBWTests(ctr_udp):
 
 def UDPProbeTests(ctr_udp=1):
   mts = MyTestSuite()
-  for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
-    for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
-      if remoteserver != remoteclient:
-        print (remoteclient.name + ' to ' + remoteserver.name)
-        mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
-        mts.startAllPings()
-        print 'start test'
-        remoteclient.UDPProbeTest(remoteserver)
-        print 'done test'
-        print 'no traffic for 10 secs'
-        time.sleep(time_sleep)
-        print 'done: stop all process and transfer logs'
-        mts.stopAllPings()
-        mts.R.remoteCommand('killall tcpdump')
-        # transfer logs
-        mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
+  for k in range(ctr_udp):
+    for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+      for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+        if remoteserver != remoteclient:
+          print (remoteclient.name + ' to ' + remoteserver.name)
+          mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+          mts.startAllPings()
+          print 'start test'
+          remoteclient.UDPProbeTest(remoteserver)
+          print 'done test'
+          print 'no traffic for 10 secs'
+          time.sleep(time_sleep)
+          print 'done: stop all process and transfer logs'
+          mts.stopAllPings()
+          mts.R.remoteCommand('killall tcpdump')
+          # transfer logs
+          mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
+    print "ROUND ", k
   return mts
