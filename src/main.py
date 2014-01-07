@@ -80,7 +80,9 @@ def UDPBWTests(ctr_udp):
 
 def UDPProbeTests(ctr_udp=1):
   mts = MyTestSuite()
+  time_sleep = 10.0
   for k in range(ctr_udp):
+    print "ROUND ", k
     for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
       for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
         if remoteserver != remoteclient:
@@ -97,5 +99,4 @@ def UDPProbeTests(ctr_udp=1):
           mts.R.remoteCommand('killall tcpdump')
           # transfer logs
           mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
-    print "ROUND ", k
   return mts
