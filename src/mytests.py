@@ -158,3 +158,9 @@ class MyTestSuite():
     self.stopAllPings()
     self.killAll('tcpdump')
     self.killAll('iperf')
+    return
+
+  def stop_n_clear(self):
+    self.stopAllSuit()
+    self.clearAllHosts()
+    return
