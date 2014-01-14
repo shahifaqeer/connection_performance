@@ -95,7 +95,7 @@ class RemoteHost:
     cmd = 'udpprober -s '+server.ip
     logfilename = 'udpprobe_'+self.name+server.name+'.log'
     self.remoteCommand(cmd, logfilename)
-    fcap = open(logfilename, 'r')
+    fcap = open('testlogs/'+logfilename, 'r')
     stats = fcap.readline().split(',')
     return stats[3]
 
