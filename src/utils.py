@@ -97,10 +97,10 @@ class RemoteHost:
     #self.remoteCommand(cmd, logfilename)
     sin, sout, serr = self.host.exec_command(cmd + ' >> '+ logfilename)
     for line in sout:
-      stats = line.split(',')
+      print line
     #fcap = open('testlogs/'+logfilename, 'r')
     #stats = fcap.readline().split(',')
-    return stats[3]
+    return line.split(',')[3]
 
   def UDPIperfTest(self, server, bwlim):
     #sin, sout, serr = server.host.exec_command('iperf -s -u &')
