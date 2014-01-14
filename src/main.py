@@ -34,6 +34,33 @@ def bandwidthTest(ctr_tcp, ctr_udp):
   print  time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()), " DONE"
   return mts
 
+def UDPBWGraphs(ctr_udp=1):
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+  mts.startAllPings()
+  print "start pings"
+  time_sleep = 10.0
+
+  for k in range(ctr_udp):
+    print "ROUND ", k
+    for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+      for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+        if remoteserver != remoteclient:
+          print (remoteclient.name + ' to ' + remoteserver.name)
+          #mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+          print 'start udpprobe test'
+          bwlim = remoteclient.UDPProbeTest(remoteserver)
+          print 'done udpprobe test; start iperf udp with bw '+bwlim
+          remoteclient.UDPIperfTest(remoteserver, bwlim)
+          print 'done iperf udp test'
+          #mts.R.remoteCommand('killall tcpdump')
+          # transfer logs
+          #mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
+  mts.stopAllPings()
+  #mts.transferLogs('udpbwtest')
+
+  return mts
+
 def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, testtime, bwlim):
   mts.startAllPings()
   print "start pings"

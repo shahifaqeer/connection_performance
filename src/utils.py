@@ -93,7 +93,17 @@ class RemoteHost:
   def UDPProbeTest(self, server):
     sin, sout, serr = server.host.exec_command('udpprobeserver &')
     cmd = 'udpprober -s '+server.ip
-    logfilename = 'udp_'+self.name+server.name+'.log'
+    logfilename = 'udpprobe_'+self.name+server.name+'.log'
+    self.remoteCommand(cmd, logfilename)
+    fcap = open(logfilename, 'r')
+    stats = fcap.readline().split(',')
+    return stats[3]
+
+  def UDPIperfTest(self, server, bwlim):
+    #sin, sout, serr = server.host.exec_command('iperf -s -u &')
+    #start udp servers manually
+    cmd = 'iperf -c '+server.ip+' -u -b '+bwlim+'k'+' -y C'
+    logfilename = 'iperf_udp_'+self.name+server.name+'.log'
     self.remoteCommand(cmd, logfilename)
     return
 
