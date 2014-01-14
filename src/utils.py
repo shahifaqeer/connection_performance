@@ -102,7 +102,7 @@ class RemoteHost:
       bwlim = line.split(',')[3]
     #fcap = open('testlogs/'+logfilename, 'r')
     #stats = fcap.readline().split(',')
-    return bwlim
+    return str(bwlim)
 
   def UDPIperfTest(self, server, bwlim):
     #sin, sout, serr = server.host.exec_command('iperf -s -u &')
