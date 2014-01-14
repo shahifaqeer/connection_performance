@@ -96,10 +96,10 @@ class RemoteHost:
     logfilename = 'udpprobe_'+self.name+server.name+'.log'
     #self.remoteCommand(cmd, logfilename)
     bwlim = 1000000
-    sin, sout, serr = self.host.exec_command(cmd + ' >> '+ logfilename)
+    sin, sout, serr = self.host.exec_command(cmd)
     for line in sout:
-      print line
-      bwlim = line.split(',')[3]
+      self.remoteCommand('echo '+line.split('\n')[0], logfilename)
+      bwlim = line.split(',')[2]
     #fcap = open('testlogs/'+logfilename, 'r')
     #stats = fcap.readline().split(',')
     return str(bwlim)
