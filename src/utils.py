@@ -94,9 +94,12 @@ class RemoteHost:
     sin, sout, serr = server.host.exec_command('udpprobeserver &')
     cmd = 'udpprober -s '+server.ip
     logfilename = 'udpprobe_'+self.name+server.name+'.log'
-    self.remoteCommand(cmd, logfilename)
-    fcap = open('testlogs/'+logfilename, 'r')
-    stats = fcap.readline().split(',')
+    #self.remoteCommand(cmd, logfilename)
+    sin, sout, serr = self.host.exec_command(cmd + ' >> '+ logfilename)
+    for line in sout:
+      stats = line.split(',')
+    #fcap = open('testlogs/'+logfilename, 'r')
+    #stats = fcap.readline().split(',')
     return stats[3]
 
   def UDPIperfTest(self, server, bwlim):
