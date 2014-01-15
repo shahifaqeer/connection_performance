@@ -64,21 +64,22 @@ def UDPBWGraphs(ctr_udp=1):
 def UDPBWCompareProber(ctr_udp=1):
   mts = MyTestSuite()
   print "Connected to all hosts"
+
   remoteserver = mts.S
   remoterouter = mts.R
   for remoteclient in [mts.A, mts.B, mts.C]:
     if remoteserver != remoteclient:
       for k in range(ctr_udp):
         print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
-        bwlim = remoteclient.startIperfClient(remoterouter)
-        bwlim = remoteclient.startIperfClient(remoteserver)
-        bwlim = remoterouter.startIperfClient(remoteserver)
+        bwlim = remoteclient.UDPProbeTest(remoterouter)
+        bwlim = remoteclient.UDPProbeTest(remoteserver)
+        bwlim = remoterouter.UDPProbeTest(remoteserver)
         print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
-        bwlim = remoterouter.startIperfClient(remoteclient)
-        bwlim = remoteserver.startIperfClient(remoteclient)
-        bwlim = remoteserver.startIperfClient(remoterouter)
+        bwlim = remoterouter.UDPProbeTest(remoteclient)
+        bwlim = remoteserver.UDPProbeTest(remoteclient)
+        bwlim = remoteserver.UDPProbeTest(remoterouter)
       # transfer logs
-      mts.transferLogs('iperftcp_'+remoteclient.name+remoteserver.name)
+      mts.transferLogs('udpprobe_'+remoteclient.name+remoteserver.name)
   return mts
 
 def UDPBWCompareIperfTCP(ctr_tcp=1):
@@ -93,15 +94,15 @@ def UDPBWCompareIperfTCP(ctr_tcp=1):
     if remoteserver != remoteclient:
       for k in range(ctr_tcp):
         print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
-        bwlim = remoteclient.UDPProbeTest(remoterouter)
-        bwlim = remoteclient.UDPProbeTest(remoteserver)
-        bwlim = remoterouter.UDPProbeTest(remoteserver)
+        bwlim = remoteclient.startIperfClient(remoterouter)
+        bwlim = remoteclient.startIperfClient(remoteserver)
+        bwlim = remoterouter.startIperfClient(remoteserver)
         print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
-        bwlim = remoterouter.UDPProbeTest(remoteclient)
-        bwlim = remoteserver.UDPProbeTest(remoteclient)
-        bwlim = remoteserver.UDPProbeTest(remoterouter)
+        bwlim = remoterouter.startIperfClient(remoteclient)
+        bwlim = remoteserver.startIperfClient(remoteclient)
+        bwlim = remoteserver.startIperfClient(remoterouter)
       # transfer logs
-      mts.transferLogs('udpprobe_'+remoteclient.name+remoteserver.name)
+      mts.transferLogs('iperftcp_'+remoteclient.name+remoteserver.name)
   return mts
 
 def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, testtime, bwlim):
