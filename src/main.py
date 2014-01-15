@@ -70,11 +70,12 @@ def UDPBWCompareProber(ctr_udp=1):
   for remoteclient in [mts.A, mts.B, mts.C]:
     if remoteserver != remoteclient:
       for k in range(ctr_udp):
+        print "ROUND ", k
         print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
         bwlim = remoteclient.UDPProbeTest(remoterouter)
         bwlim = remoteclient.UDPProbeTest(remoteserver)
         bwlim = remoterouter.UDPProbeTest(remoteserver)
-        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
+        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoteclient.name)
         bwlim = remoterouter.UDPProbeTest(remoteclient)
         bwlim = remoteserver.UDPProbeTest(remoteclient)
         bwlim = remoteserver.UDPProbeTest(remoterouter)
@@ -93,11 +94,12 @@ def UDPBWCompareIperfTCP(ctr_tcp=1):
   for remoteclient in [mts.A, mts.B, mts.C]:
     if remoteserver != remoteclient:
       for k in range(ctr_tcp):
+        print "ROUND ", k
         print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
         bwlim = remoteclient.startIperfClient(remoterouter)
         bwlim = remoteclient.startIperfClient(remoteserver)
         bwlim = remoterouter.startIperfClient(remoteserver)
-        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
+        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoteclient.name)
         bwlim = remoterouter.startIperfClient(remoteclient)
         bwlim = remoteserver.startIperfClient(remoteclient)
         bwlim = remoteserver.startIperfClient(remoterouter)
