@@ -67,7 +67,7 @@ def UDPBWCompareProber(ctr_udp=1):
 
   remoteserver = mts.S
   remoterouter = mts.R
-  for remoteclient in [mts.A, mts.B, mts.C]:
+  for remoteclient in [mts.A, mts.B]: #, mts.C]:
     if remoteserver != remoteclient:
       for k in range(ctr_udp):
         print "ROUND ", k
