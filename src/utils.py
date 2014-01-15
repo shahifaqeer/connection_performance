@@ -107,7 +107,12 @@ class RemoteHost:
   def UDPIperfTest(self, server, bwlim):
     #sin, sout, serr = server.host.exec_command('iperf -s -u &')
     #start udp servers manually
-    cmd = 'iperf -c '+server.ip+' -u -b '+bwlim+'k'+' -y C'
+    servip = server.ip
+    # weird problem: udp iperf to router from clients works only on 192.168.10.1
+    # whereas from server works only on 192.168.20.2
+    if (server.name == 'R') and (self.name != 'S'):
+      servip = '192.168.10.1'
+    cmd = 'iperf -c '+servip+' -u -b '+bwlim+'k'+' -y C'
     logfilename = 'iperf_udp_'+self.name+server.name+'.log'
     self.remoteCommand(cmd, logfilename)
     return

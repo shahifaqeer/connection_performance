@@ -13,6 +13,7 @@ S_udp = 6005
 R_user = 'root'
 R_pass = 'passw0rd'
 R_ip = '192.168.20.2'
+#R_ip2 = '192.168.10.1'
 R_port = 5004
 R_udp = 6004
 
