@@ -67,10 +67,9 @@ class RemoteHost:
     # self.remoteLogTransfer()
 
   def startIperfServer(self):
-    if self.name == 'S':
-      # self.remoteCommand('ipef -s -p ')
-      # TODO
-      pass
+    cmd = 'iperf -s -p '+str(self.tcp_port)
+    logfilename = 'iperf_tcp_server_'+self.name+'.log'
+    sin, sout, serr = self.host.exec_command(cmd + ' >> testlogs/' + logfilename + ' &')
     return
 
   def startIperfClient(self, server, proto='tcp', bwlim=0, reverse=0):

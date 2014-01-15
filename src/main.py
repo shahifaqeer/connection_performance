@@ -51,14 +51,57 @@ def UDPBWGraphs(ctr_udp=1):
           print 'start udpprobe test'
           bwlim = remoteclient.UDPProbeTest(remoteserver)
           print 'done udpprobe test; start iperf udp with bw '+bwlim
-          remoteclient.UDPIperfTest(remoteserver, bwlim)
-          print 'done iperf udp test'
+          #remoteclient.UDPIperfTest(remoteserver, bwlim)
+          #print 'done iperf udp test'
           #mts.R.remoteCommand('killall tcpdump')
           # transfer logs
           #mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
   mts.stopAllPings()
   #mts.transferLogs('udpbwtest')
 
+  return mts
+
+def UDPBWCompareProber(ctr_udp=1):
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+  remoteserver = mts.S
+  remoterouter = mts.R
+  for remoteclient in [mts.A, mts.B, mts.C]:
+    if remoteserver != remoteclient:
+      for k in range(ctr_udp):
+        print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
+        bwlim = remoteclient.startIperfClient(remoterouter)
+        bwlim = remoteclient.startIperfClient(remoteserver)
+        bwlim = remoterouter.startIperfClient(remoteserver)
+        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
+        bwlim = remoterouter.startIperfClient(remoteclient)
+        bwlim = remoteserver.startIperfClient(remoteclient)
+        bwlim = remoteserver.startIperfClient(remoterouter)
+      # transfer logs
+      mts.transferLogs('iperftcp_'+remoteclient.name+remoteserver.name)
+  return mts
+
+def UDPBWCompareIperfTCP(ctr_tcp=1):
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+  print "start all tcp servers on all hosts"
+  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+    x.startIperfServer()
+  remoteserver = mts.S
+  remoterouter = mts.R
+  for remoteclient in [mts.A, mts.B, mts.C]:
+    if remoteserver != remoteclient:
+      for k in range(ctr_tcp):
+        print ('UPLINK '+ remoteclient.name + ' to ' + remoteserver.name)
+        bwlim = remoteclient.UDPProbeTest(remoterouter)
+        bwlim = remoteclient.UDPProbeTest(remoteserver)
+        bwlim = remoterouter.UDPProbeTest(remoteserver)
+        print ('DOWNLINK '+ remoteserver.name + ' to ' + remoterouter.name)
+        bwlim = remoterouter.UDPProbeTest(remoteclient)
+        bwlim = remoteserver.UDPProbeTest(remoteclient)
+        bwlim = remoteserver.UDPProbeTest(remoterouter)
+      # transfer logs
+      mts.transferLogs('udpprobe_'+remoteclient.name+remoteserver.name)
   return mts
 
 def weirdLatencyTest(mts, ctr_tcp, ctr_udp, cong_host1, cong_host2, testtime, bwlim):
