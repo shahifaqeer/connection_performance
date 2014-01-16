@@ -71,10 +71,16 @@ class RemoteHost:
     self.remoteCommand('killall ping')
     # self.remoteLogTransfer()
 
-  def startIperfServer(self):
-    cmd = 'iperf -s -p '+str(self.tcp_port)
-    logfilename = 'iperf_tcp_server_'+self.name+'.log'
-    sin, sout, serr = self.host.exec_command(cmd + ' >> ' + logfilename + ' &')
+  def startIperfServer(self, proto='tcp'):
+
+    if proto == 'udp':
+      cmd = 'iperf -s -u -p '+str(self.udp_port)
+      logfilename = 'iperf_udp_server_'+self.name+'.log'
+      sin, sout, serr = self.host.exec_command(cmd + ' >> ' + logfilename + ' &')
+    else:
+      cmd = 'iperf -s -p '+str(self.tcp_port)
+      logfilename = 'iperf_tcp_server_'+self.name+'.log'
+      sin, sout, serr = self.host.exec_command(cmd + ' >> ' + logfilename + ' &')
     return
 
   def startIperfClient(self, server, proto='tcp', bwlim=0, reverse=0):
