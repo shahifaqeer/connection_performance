@@ -176,13 +176,15 @@ def UDPProbeTests(ctr_udp=1):
 
 def TrafficLatencyTests():
   mts = MyTestSuite()
-  print "Connected to all hosts"
+  print "Connected to all hosts: Traffic Latency Test Start"
+
   print "start all tcp servers on all hosts"
   for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
     x.startIperfServer()
   print "start all udp servers on all hosts"
   for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
     x.startIperfServer('udp')
+
   remoteserver = mts.S
   remoterouter = mts.R
   for remoteclient in [mts.A, mts.B]: #, mts.C]:
@@ -190,6 +192,7 @@ def TrafficLatencyTests():
       for k in range(ctr_tcp):
         print "ROUND ", k
         # start pings and router TCP dump
+        print "start ping all pairs and tcpdump on R"
         mts.startAllPings(0.100)
         mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
         # no traffic for 10 sec - baseline
@@ -213,6 +216,7 @@ def TrafficLatencyTests():
 
         # stop all pings, tcpdump. DONT stop iperf
         mts.stopAllPings()
+        mts.R.remoteCommand('killall tcpdump')
         # transfer logs
-        mts.transferLogs('iperftcp_'+remoteclient.name+remoteserver.name)
+        mts.transferLogs('traffic_latency_'+remoteclient.name+remoteserver.name)
   return mts
