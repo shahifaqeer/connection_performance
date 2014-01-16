@@ -86,7 +86,7 @@ class RemoteHost:
     if (reverse):
       cmd = cmd + ' -r'
 
-    self.remoteCommand(cmd, logfilename, 1)
+    self.remoteCommand(cmd, logfilename)
     return
 
   def UDPProbeTest(self, server):
@@ -104,6 +104,9 @@ class RemoteHost:
     return str(bwlim)
 
   def UDPIperfTest(self, server, bwlim):
+  print "start all tcp servers on all hosts"
+  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+    x.startIperfServer()
     #sin, sout, serr = server.host.exec_command('iperf -s -u &')
     #start udp servers manually
     servip = server.ip
