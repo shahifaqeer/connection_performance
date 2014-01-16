@@ -55,11 +55,16 @@ class RemoteHost:
     self.logcmd(cmd)
     return
 
-  def startPingAll(self):
-    if self.name == 'R':
-      self.remoteCommand('sh Browserlab/pings/pingall.sh')
+  def startPingAll(self, interval=1):
+    if interval < 0.200:
+      cmd = 'echo "gtnoise" | sudo -S sh Browserlab/pings/pingall.sh "' + self.name + '" '+str(interval)
     else:
-      self.remoteCommand('sh Browserlab/pings/pingall.sh "' + self.name + '"')
+      cmd = 'sh Browserlab/pings/pingall.sh "' + self.name + '" '+str(interval)
+
+    if self.name == 'R':
+      self.remoteCommand('sh Browserlab/pings/pingall.sh '+str(interval))
+    else:
+      self.remoteCommand(cmd)
     return
 
   def stopPingAll(self):
@@ -104,9 +109,9 @@ class RemoteHost:
     return str(bwlim)
 
   def UDPIperfTest(self, server, bwlim):
-  print "start all tcp servers on all hosts"
-  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
-    x.startIperfServer()
+    print "start all tcp servers on all hosts"
+    for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+      x.startIperfServer()
     #sin, sout, serr = server.host.exec_command('iperf -s -u &')
     #start udp servers manually
     servip = server.ip

@@ -91,7 +91,7 @@ def UDPBWCompareIperfTCP(ctr_tcp=1):
     x.startIperfServer()
   remoteserver = mts.S
   remoterouter = mts.R
-  for remoteclient in [mts.A, mts.B, mts.C]:
+  for remoteclient in [mts.A, mts.B]: #, mts.C]:
     if remoteserver != remoteclient:
       for k in range(ctr_tcp):
         print "ROUND ", k

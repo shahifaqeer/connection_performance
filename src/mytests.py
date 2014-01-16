@@ -28,13 +28,13 @@ class MyTestSuite():
       remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port), 'iperf_'+remotehost.name+'_udp.log', 1)
     return
 
-  def startAllPings(self):
+  def startAllPings(self, interval):
     # start ALL pings
-    self.A.startPingAll()
-    self.B.startPingAll()
-    self.C.startPingAll()
-    self.R.startPingAll()
-    self.S.startPingAll()
+    self.A.startPingAll(interval)
+    self.B.startPingAll(interval)
+    self.C.startPingAll(interval)
+    self.R.startPingAll(interval)
+    self.S.startPingAll(interval)
     return
 
   def stopAllPings(self):
