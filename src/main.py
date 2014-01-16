@@ -174,7 +174,8 @@ def UDPProbeTests(ctr_udp=1):
           mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
   return mts
 
-def TrafficLatencyTests():
+def TrafficLatencyTests(ctr_tests=1):
+  time_sleep = 10.0
   mts = MyTestSuite()
   print "Connected to all hosts: Traffic Latency Test Start"
 
@@ -189,7 +190,7 @@ def TrafficLatencyTests():
   remoterouter = mts.R
   for remoteclient in [mts.A, mts.B]: #, mts.C]:
     if remoteserver != remoteclient:
-      for k in range(ctr_tcp):
+      for k in range(ctr_tests):
         print "ROUND ", k
         # start pings and router TCP dump
         print "start ping all pairs and tcpdump on R"

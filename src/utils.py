@@ -174,7 +174,7 @@ class RemoteHost:
 
   def tcpDump(self, logfilename):
     if self.name == 'R':
-      cmd = 'tcpdump -s 60 -i any -w tcpdump/'+logfilename
+      cmd = 'tcpdump -s 100 -i any -w tcpdump/'+logfilename
     else:
       cmd = 'echo "gtnoise" | sudo -S tcpdump -s 100 -i any -w tcpdump/'+logfilename
     self.host.exec_command(cmd)
