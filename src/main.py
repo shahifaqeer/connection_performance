@@ -173,3 +173,46 @@ def UDPProbeTests(ctr_udp=1):
           # transfer logs
           mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
   return mts
+
+def TrafficLatencyTests():
+  mts = MyTestSuite()
+  print "Connected to all hosts"
+  print "start all tcp servers on all hosts"
+  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+    x.startIperfServer()
+  print "start all udp servers on all hosts"
+  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+    x.startIperfServer('udp')
+  remoteserver = mts.S
+  remoterouter = mts.R
+  for remoteclient in [mts.A, mts.B]: #, mts.C]:
+    if remoteserver != remoteclient:
+      for k in range(ctr_tcp):
+        print "ROUND ", k
+        # start pings and router TCP dump
+        mts.startAllPings(0.100)
+        mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+        # no traffic for 10 sec - baseline
+        time.sleep(time_sleep)
+        # iperf tcp 10 sec client1 to S and vice versa
+        print ('UPLINK tcp '+ remoteclient.name + ' to ' + remoteserver.name)
+        bwlim = remoteclient.startIperfClient(remoteserver)
+        print ('DOWNLINK tcp '+ remoteserver.name + ' to ' + remoteclient.name)
+        bwlim = remoteserver.startIperfClient(remoteclient)
+        # iperf udp 10 sec client1 to S and vice versa
+
+        if remoteclient.name == 'B':
+          bw = '15m'
+        else:
+          bw = '150m'
+
+        print ('UPLINK udp '+ remoteclient.name + ' to ' + remoteserver.name)
+        bwlim = remoteclient.startIperfClient(remoteserver, 'udp', bw)
+        print ('DOWNLINK udp '+ remoteserver.name + ' to ' + remoteclient.name)
+        bwlim = remoteserver.startIperfClient(remoteclient, 'udp', bw)
+
+        # stop all pings, tcpdump. DONT stop iperf
+        mts.stopAllPings()
+        # transfer logs
+        mts.transferLogs('iperftcp_'+remoteclient.name+remoteserver.name)
+  return mts

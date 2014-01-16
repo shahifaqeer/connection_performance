@@ -68,7 +68,10 @@ class RemoteHost:
     return
 
   def stopPingAll(self):
-    self.remoteCommand('killall ping')
+    if self.name != 'R':
+      self.remoteCommand('echo "gtnoise" | sudo -S killall ping')
+    else:
+      self.remoteCommand('killall ping')
     # self.remoteLogTransfer()
 
   def startIperfServer(self, proto='tcp'):
@@ -173,7 +176,7 @@ class RemoteHost:
     if self.name == 'R':
       cmd = 'tcpdump -s 60 -i any -w tcpdump/'+logfilename
     else:
-      cmd = 'echo "gtnoise" | sudo -S -su tcpdump -s 100 -i any -w tcpdump/'+logfilename
+      cmd = 'echo "gtnoise" | sudo -S tcpdump -s 100 -i any -w tcpdump/'+logfilename
     self.host.exec_command(cmd)
     self.logcmd(cmd)
     return
