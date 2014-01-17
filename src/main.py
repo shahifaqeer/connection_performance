@@ -225,17 +225,18 @@ def TrafficLatencyTests(remoteclient, remoteserver, mts, ctr_tests=1):
 
   return mts
 
-def runTrafficLatTest(ratelist):
-  for rate in ratelist:
-    if rate != 0:
-      mts.S.remoteCommand('echo "gtnoise" | sudo -S sh ratelimit.sh '+rate+'mbit '+rate+'mbit')
-      mts.R.remoteCommand('sh ratelimit2.sh '+rate+'mbit '+rate+'mbit')
-    else:
-      mts.S.remoteCommand('echo "gtnoise" | sudo -S tc qdisc del dev eth1 root')
-      mts.R.remoteCommand('tc qdisc del dev eth1 root')
+def runTrafficLatTest(rate):
+  mts = MyTestSuite()
 
-    mts = MyTestSuite()
-    mts2 = TrafficLatencyTests(mts.A, mts.S, mts)
-    mts2 = TrafficLatencyTests(mts.B, mts.S, mts)
-    mts2 = TrafficLatencyTests(mts.C, mts.S, mts)
+  if rate != 0:
+    mts.S.remoteCommand('echo "gtnoise" | sudo -S sh ratelimit.sh '+rate+'mbit '+rate+'mbit')
+    mts.R.remoteCommand('sh ratelimit2.sh '+rate+'mbit '+rate+'mbit')
+  else:
+    mts.S.remoteCommand('echo "gtnoise" | sudo -S tc qdisc del dev eth1 root')
+    mts.R.remoteCommand('tc qdisc del dev eth1 root')
+
+  mts2 = TrafficLatencyTests(mts.A, mts.S, mts)
+  mts2 = TrafficLatencyTests(mts.B, mts.S, mts)
+  mts2 = TrafficLatencyTests(mts.C, mts.S, mts)
+
   return
