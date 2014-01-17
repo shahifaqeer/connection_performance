@@ -174,50 +174,68 @@ def UDPProbeTests(ctr_udp=1):
           mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
   return mts
 
-def TrafficLatencyTests(ctr_tests=1):
+def TrafficLatencyTests(remoteclient, remoteserver, mts, ctr_tests=1):
   time_sleep = 10.0
-  mts = MyTestSuite()
   print "Connected to all hosts: Traffic Latency Test Start"
 
   print "start all tcp servers on all hosts"
-  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+  for x in [remoteclient, remoteserver]:
     x.startIperfServer()
   print "start all udp servers on all hosts"
-  for x in [mts.A, mts.B, mts.C, mts.R, mts.S]:
+  for x in [remoteclient, remoteserver]:
     x.startIperfServer('udp')
 
-  remoteserver = mts.S
-  remoterouter = mts.R
-  for remoteclient in [mts.A, mts.B]: #, mts.C]:
-    if remoteserver != remoteclient:
-      for k in range(ctr_tests):
-        print "ROUND ", k
-        # start pings and router TCP dump
-        print "start ping all pairs and tcpdump on R"
-        mts.startAllPings(0.100)
-        mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
-        # no traffic for 10 sec - baseline
-        time.sleep(time_sleep)
-        # iperf tcp 10 sec client1 to S and vice versa
-        print ('UPLINK tcp '+ remoteclient.name + ' to ' + remoteserver.name)
-        bwlim = remoteclient.startIperfClient(remoteserver)
-        print ('DOWNLINK tcp '+ remoteserver.name + ' to ' + remoteclient.name)
-        bwlim = remoteserver.startIperfClient(remoteclient)
-        # iperf udp 10 sec client1 to S and vice versa
+  for k in range(ctr_tests):
+    print "ROUND ", k
+    # start pings and router TCP dump
+    print "start ping all pairs and tcpdump on R"
+    mts.startAllPings(0.100)
+    mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+    #tcp dump on remoteclient and remoteserver too
+    remoteclient.tcpDump(remoteclient.name+'_'+remoteclient.name+remoteserver.name+'.pcap')
+    remoteserver.tcpDump(remoteserver.name+'_'+remoteclient.name+remoteserver.name+'.pcap')
+    # no traffic for 10 sec - baseline
+    time.sleep(time_sleep)
+    # iperf tcp 10 sec client1 to S and vice versa
+    print ('UPLINK tcp '+ remoteclient.name + ' to ' + remoteserver.name)
+    bwlim = remoteclient.startIperfClient(remoteserver)
+    print ('DOWNLINK tcp '+ remoteserver.name + ' to ' + remoteclient.name)
+    bwlim = remoteserver.startIperfClient(remoteclient)
+    # iperf udp 10 sec client1 to S and vice versa
 
-        if remoteclient.name == 'B':
-          bw = '15m'
-        else:
-          bw = '150m'
+    if remoteclient.name == 'B':
+      bw = '15m'
+    else:
+      bw = '150m'
 
-        print ('UPLINK udp '+ remoteclient.name + ' to ' + remoteserver.name)
-        bwlim = remoteclient.startIperfClient(remoteserver, 'udp', bw)
-        print ('DOWNLINK udp '+ remoteserver.name + ' to ' + remoteclient.name)
-        bwlim = remoteserver.startIperfClient(remoteclient, 'udp', bw)
+    print ('UPLINK udp '+ remoteclient.name + ' to ' + remoteserver.name)
+    bwlim = remoteclient.startIperfClient(remoteserver, 'udp', bw)
+    print ('DOWNLINK udp '+ remoteserver.name + ' to ' + remoteclient.name)
+    bwlim = remoteserver.startIperfClient(remoteclient, 'udp', bw)
 
-        # stop all pings, tcpdump. DONT stop iperf
-        mts.stopAllPings()
-        mts.R.remoteCommand('killall tcpdump')
-        # transfer logs
-        mts.transferLogs('traffic_latency_'+remoteclient.name+remoteserver.name)
+    # stop all pings, tcpdump, iperf servers
+    mts.stopAllPings()
+    mts.killAll('iperf')
+    #killall tcpdumps
+    mts.R.remoteCommand('killall tcpdump')
+    remoteclient.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+    remoteserver.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+    # transfer logs
+    mts.transferLogs('traffic_latency_'+remoteclient.name+remoteserver.name)
+
   return mts
+
+def runTrafficLatTest(ratelist):
+  for rate in ratelist:
+    if rate != 0:
+      mts.S.remoteCommand('echo "gtnoise" | sudo -S sh ratelimit.sh '+rate+'mbit '+rate+'mbit')
+      mts.R.remoteCommand('sh ratelimit2.sh '+rate+'mbit '+rate+'mbit')
+    else:
+      mts.S.remoteCommand('echo "gtnoise" | sudo -S tc qdisc del dev eth1 root')
+      mts.R.remoteCommand('tc qdisc del dev eth1 root')
+
+    mts = MyTestSuite()
+    mts2 = TrafficLatencyTests(mts.A, mts.S, mts)
+    mts2 = TrafficLatencyTests(mts.B, mts.S, mts)
+    mts2 = TrafficLatencyTests(mts.C, mts.S, mts)
+  return
