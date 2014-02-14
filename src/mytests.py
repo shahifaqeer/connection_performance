@@ -12,6 +12,7 @@ class MyTestSuite():
     self.B = RemoteHost(B_ip, B_user, B_pass, B_port, B_udp, 'B')
     self.C = RemoteHost(C_ip, C_user, C_pass, C_port, C_udp, 'C')
     self.R = RemoteHost(R_ip, R_user, R_pass, R_port, R_udp, 'R')
+    self.Q = RemoteHost(Q_ip, Q_user, Q_pass, Q_port, Q_udp, 'Q')
     self.S = RemoteHost(S_ip, S_user, S_pass, S_port, S_udp, 'S')
     self.BWLIST = [50,100,150,200,500,600]
     self.serverList = [self.A, self.B, self.C, self.R, self.S]
@@ -19,13 +20,13 @@ class MyTestSuite():
   def startIperfTCPServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
-      remotehost.remoteCommand('iperf -s -w 128k -p '+str(remotehost.tcp_port), 'iperf_'+remotehost.name+'_tcp.log', 1)
+      remotehost.remoteCommand('iperf -s -p '+str(remotehost.tcp_port), 'iperf_'+remotehost.name+'_tcp.log', 1)
     return
 
   def startIperfUDPServer(self):
     # start ALL iperf servers (already done for now locally)
     for remotehost in self.serverList:
-      remotehost.remoteCommand('iperf -s -u -w 128k -p '+str(remotehost.udp_port), 'iperf_'+remotehost.name+'_udp.log', 1)
+      remotehost.remoteCommand('iperf -s -u -p '+str(remotehost.udp_port), 'iperf_'+remotehost.name+'_udp.log', 1)
     return
 
   def startAllPings(self, interval):
@@ -99,6 +100,13 @@ class MyTestSuite():
       self.R.remoteCommand('killall tcpdump')
     return
 
+  def wirelessQualityLog(self):
+    for remoteclient in [self.B, self.A]:
+      remoteclient.remoteCommand('for i in {1..10}; do /sbin/iwconfig wlan0>>testlogs/'+remoteclient.name+'_iwconfig.log; sleep 0.2; done &')
+    remoteclient = self.R
+    remoteclient.remoteCommand('for i in $(seq 10); do iw dev wlan0 station dump>>testlogs/'+remoteclient.name+'_iwconfig.log; sleep 1; done &')
+    return
+
   def transferLogs(self, description):
     # create log directory on the server
     dst = self.S.createDataLogDir(description)
@@ -139,11 +147,12 @@ class MyTestSuite():
   def closeAllHosts(self):
     for remotehost in self.serverList:
       remotehost.host.close()
+    self.Q.host.close()
     return
 
   def twoHostCongestion(self,remoteclient, remoteserver, proto, port, testtime='10', bwlim='0'):
-    server_cmd = 'iperf -s -p '+port+' -w 128k -i 2'
-    client_cmd = 'iperf -c '+remoteserver.ip+' -p '+port+' -w 128k -i 2 -t '+testtime
+    server_cmd = 'iperf -s -p '+port+' -i 2'
+    client_cmd = 'iperf -c '+remoteserver.ip+' -p '+port+' -i 2 -t '+testtime
 
     if proto == 'udp':
       server_cmd = server_cmd+' -u '

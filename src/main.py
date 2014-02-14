@@ -240,3 +240,79 @@ def runTrafficLatTest(rate):
   mts2 = TrafficLatencyTests(mts.C, mts.S, mts)
 
   return
+
+def startARound(mts, round_num, scenario=None, remoteclient=None, remoteserver=None):
+  mts.startAllPings(0.100)
+  mts.R.tcpDump('R.pcap')
+  if scenario is not None:
+    #tcp dump on remoteclient and remoteserver too
+    remoteclient.tcpDump(remoteclient.name+'.pcap')
+    remoteserver.tcpDump(remoteserver.name+'.pcap')
+  mts.wirelessQualityLog()
+  return
+
+def endARound(mts, round_num, description, scenario=None, remoteclient=None, remoteserver=None):
+  time_wait = 5.0
+  mts.stopAllPings()
+  mts.R.remoteCommand('killall tcpdump')
+  if scenario is not None:
+    remoteclient.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+    remoteserver.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+  mts.transferLogs(description)
+  #wait for 5 seconds due to transfers before next round begins
+  time.sleep(time_wait)
+  return
+
+
+def TCPLatencyTest(mts, rate, num_of_rounds=1):
+  rate = str(rate)
+  time_notraffic = 10.0
+
+  print "start all tcp servers on all hosts"
+  for x in mts.serverList:
+    x.startIperfServer()
+
+  k = 0
+
+  for ctr in range(num_of_rounds):
+    print "ROUND ", ctr
+    des = 'traffic_no_'+rate+'mbit'
+    print k, des
+    startARound(mts, k)
+    time.sleep(time_notraffic)
+    endARound(mts, k, des)
+
+    remoteserver = mts.S
+    for remoteclient in [mts.A, mts.B, mts.C]:
+      k+=1
+      des =  'traffic_'+remoteclient.name+'S_'+rate+'mbit'
+      print k, des
+      startARound(mts, k, des, remoteclient, remoteserver)
+      bwlim = remoteclient.startIperfClient(remoteserver)
+      endARound(mts, k, des, des, remoteclient, remoteserver)
+
+      k+=1
+      des = 'traffic_S'+remoteclient.name+'_'+rate+'mbit'
+      print k, des
+      startARound(mts, k, des, remoteclient, remoteserver)
+      bwlim = remoteserver.startIperfClient(remoteclient)
+      endARound(mts, k, des, des, remoteclient, remoteserver)
+
+  return mts
+
+def runTCPLatTest(rate):
+  mts = MyTestSuite()
+
+  if rate != 0:
+    rate = str(rate)
+    mts.Q.remoteCommand('sh ratelimit2.sh eth0 '+rate+'mbit '+rate+'mbit')
+    mts.R.remoteCommand('sh ratelimit2.sh eth1 '+rate+'mbit '+rate+'mbit')
+  else:
+    mts.Q.remoteCommand('tc qdisc del dev eth0 root')
+    mts.R.remoteCommand('tc qdisc del dev eth1 root')
+
+  mts2 = TCPLatencyTest(mts, rate)
+  mts2.stop_n_clear()
+  mts2.closeAllHosts()
+
+  return

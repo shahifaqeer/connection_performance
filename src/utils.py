@@ -38,7 +38,7 @@ class RemoteHost:
       print 'check host: ' + line.strip('\n')
     return
 
-  def remoteCommand(self, cmd, logfilename=None, background=0):
+  def remoteCommand(self, cmd, logfilename=None, background=0, sudo=0):
     """This should be used for starting iperf servers, pings,
     tcpdumps, etc.
 
@@ -47,6 +47,8 @@ class RemoteHost:
       cmd = cmd + ' >> testlogs/' + logfilename
     if (background):
       cmd = cmd + ' &'
+    if sudo and self.name != 'R':
+      cmd = 'echo "gtnoise" | sudo -S '+cmd
 
     stdin, stdout, stderr = self.host.exec_command(cmd)
     for line in stdout:
@@ -128,6 +130,9 @@ class RemoteHost:
     # whereas from server works only on 192.168.20.2
     if (server.name == 'R') and (self.name != 'S'):
       servip = '192.168.10.1'
+    elif (server.name == 'R') and (self.name == 'S'):
+      servip = '192.168.1.2'
+
     cmd = 'iperf -c '+servip+' -u -b '+bwlim+'k'+' -y C'
     logfilename = 'iperf_udp_'+self.name+server.name+'.log'
     self.remoteCommand(cmd, logfilename)

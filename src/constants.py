@@ -12,10 +12,18 @@ S_udp = 6005
 #router R options
 R_user = 'root'
 R_pass = 'passw0rd'
-R_ip = '192.168.20.2'
-#R_ip2 = '192.168.10.1'
+R_ip = '192.168.10.1'
+#R_ip2 = '192.168.1.2'
 R_port = 5004
 R_udp = 6004
+
+#router R options
+Q_user = 'root'
+Q_pass = 'passw0rd'
+Q_ip = '192.168.1.1'
+#R_ip2 = '192.168.20.2'
+Q_port = 5006
+Q_udp = 6006
 
 # C : hnl-nuc1
 C_user = 'gtnoise'
