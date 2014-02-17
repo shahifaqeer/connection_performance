@@ -1,13 +1,59 @@
-from utils import RemoteHost
 import time
+import paramiko
 from link_constants import *
+
+
+class Router:
+  def __init__(self, ip, user, passwd):
+    self.ip = ip
+    self.user = user
+    self.passwd = passwd
+
+    self.host = self.connectHost(ip, user, passwd)
+
+    self.host.remoteCommand('mkdir -p /tmp/browserlab/')
+    self.fileout = open('/tmp/browserlab/logcmd.log', 'a+w')
+
+  def connectHost(self, ip, user, passwd):
+    host = paramiko.SSHClient()
+    host.load_system_host_keys()
+    host.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    print 'connect to ' + ip + ' user: ' + user + ' pass: ' + passwd
+    if self.name!='S':
+      host.connect(ip, username=user, password=passwd)
+    else:
+      host.connect(ip)
+    return host
+
+  def remoteCommand(self, cmd, logfilename=None, background=0):
+    """This should be used for starting iperf servers, pings,
+    tcpdumps, etc.
+
+    Commands issued here can be killed by cmd = 'killall or pkill'"""
+    if logfilename:
+      cmd = cmd + ' >> /tmp/browserlab/' + logfilename
+    if (background):
+      cmd = cmd + ' &'
+    #if sudo and self.name != 'R':
+    #  cmd = 'echo "gtnoise" | sudo -S '+cmd
+
+    stdin, stdout, stderr = self.host.exec_command(cmd)
+    for line in stdout:
+      print line
+
+    self.logcmd(cmd)
+    return
+
+  def logcmd(self, cmd):
+    self.fileout.write(self.name + ': ' + str(time.time()) +': '+ cmd + '\n')
+    print self.name + ': ' + str(time.time()) +': '+ cmd + '\n'
+    return
 
 class LinkTest():
   def __init__(self):
-    self.A = RemoteHost(A_ip, A_user, A_pass, A_port, A_udp, 'A')
-    self.R = RemoteHost(R_ip, R_user, R_pass, R_port, R_udp, 'R')
-    self.S = RemoteHost(S_ip, S_user, S_pass, S_port, S_udp, 'S')
-    self.serverlist = [self.A, self.R, self.S]
+    self.A = Host()
+    self.R = Router()
+    self.S = Server()
     return
 
   def iperfServer(self, proto):
