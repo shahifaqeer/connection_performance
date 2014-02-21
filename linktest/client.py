@@ -9,12 +9,14 @@ import schedule
 import os
 from random import randint
 
-def experiment2():
-    R = initialize_router()
+
+def initialize_devices():
+    devs = Devices()
+    return devs
+
+def experiment2(devs):
     no_traffic(R)
-
     iperf_tcp_up(R)
-
     iperf_tcp_dw(R)
 
 
