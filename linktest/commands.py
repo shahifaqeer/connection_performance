@@ -24,8 +24,10 @@ ROUTER_PASS = 'bismark123'
 ROUTER_ADDRESS_GLOBAL =  '50.167.212.31'
 SERVER_ADDRESS = '130.207.97.240'
 CLIENT_ADDRESS = '192.168.1.153'
-CLIENT_WIRELESS_INTERFACE_NAME = 'wlan0'
+CLIENT_WIRELESS_INTERFACE_NAME = 'eth1'
+#CLIENT_WIRELESS_INTERFACE_NAME = 'wlan1' #if 5 GHz
 ROUTER_WIRELESS_INTERFACE_NAME = 'wlan0'
+#ROUTER_WIRELESS_INTERFACE_NAME = 'wlan1' #if 5 GHz
 
 # client commands
 class Command(object):
@@ -88,8 +90,8 @@ class Router:
         tcpdumps, etc.
         """
         stdin, stdout, stderr = self.host.exec_command(cmd)
-        for line in stdout:
-            print 'DEBUG: '+ line
+        #for line in stdout:
+        #    print 'DEBUG: '+ line
         return
 
     def command(self, cmd):
@@ -182,7 +184,7 @@ class Server:
         s.close()
         res, run_num, pid = response.split(',')
         logcmd(msg, self.name)
-        return int(res), int(run_num), pid
+        return res, run_num, pid
 
 
 def test_cmd(dev, cmd):
@@ -217,7 +219,7 @@ class Experiment:
     def get_folder_name_from_server(self):
         serv, run_number, pid = self.S.command({'CMD':'echo "create folder name"', 'START':1})
         self.run_number = run_number
-        print 'DEBUG: run_number '+str(run_number)
+        print 'DEBUG: run_number '+run_number
         return 0
 
     def create_monitor_interface(self):
@@ -232,20 +234,30 @@ class Experiment:
 
     def radiotap_dump(self):
         self.ifup_monitor_interface()
-        self.A.command({'CMD':'tcpdump -i mon0 -s 65000 -p -U -w /tmp/browserlab/A_radiotap.pcap -G ' + str(experiment_timeout) + ' &'})
-        self.R.command({'CMD':'tcpdump -i mon0 -s 65000 -p -U -w /tmp/browserlab/R_radiotap.pcap -G ' + str(experiment_timeout) + ' &'})
+        self.A.command({'CMD':'tcpdump -i mon0 -s 0 -p -U -w /tmp/browserlab/A_radiotap.pcap -G ' + str(experiment_timeout) + ' &'})
+        self.R.command({'CMD':'tcpdump -i mon0 -s 0 -p -U -w /tmp/browserlab/R_radiotap.pcap -G ' + str(experiment_timeout)})
 
     def ping_all(self):
-        self.S.command({'CMD':'fping '+ROUTER_ADDRESS_GLOBAL+' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_S.log &'})
+        self.S.command({'CMD':'fping '+ROUTER_ADDRESS_GLOBAL+' -p 100 -l -r 1 -A >> /tmp/browserlab/fping_S.log &'})
 
-        self.A.command({'CMD':'fping '+ROUTER_ADDRESS_LOCAL+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_A.log &'})
-        self.R.command({'CMD':'fping '+CLIENT_ADDRESS+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_R.log &'})
+        self.A.command({'CMD':'fping '+ROUTER_ADDRESS_LOCAL+' '+ SERVER_ADDRESS +' -p 100 -l -r 1 -A >> /tmp/browserlab/fping_A.log &'})
+        self.R.command({'CMD':'fping '+CLIENT_ADDRESS+' '+ SERVER_ADDRESS +' -p 100 -l -r 1 -A >> /tmp/browserlab/fping_R.log &'})
+        #self.R.command({'CMD':'fping '+CLIENT_ADDRESS+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_R.log &'})
         return
 
     def tcpdump_all(self):
+        #weird bug with R.command(tcpdump) -> doesn't work with &
         self.S.command({'CMD':'tcpdump -s 100 -i eth0 -w /tmp/browserlab/S.pcap -G '+str(experiment_timeout)+' &'})
         self.A.command({'CMD':'tcpdump -s 100 -i '+ CLIENT_WIRELESS_INTERFACE_NAME +' -w /tmp/browserlab/A.pcap -G '+str(experiment_timeout)+' &'})
-        self.R.command({'CMD':'tcpdump -s 100 -i '+ ROUTER_WIRELESS_INTERFACE_NAME +' -w /tmp/browserlab/R.pcap -G '+str(experiment_timeout)+' &'})
+        self.R.command({'CMD':'tcpdump -s 100 -i '+ ROUTER_WIRELESS_INTERFACE_NAME +' -w /tmp/browserlab/R.pcap -G '+str(experiment_timeout)})
+        return
+
+    def process_log(self):
+        self.S.command({'CMD':'sleep 5; top -b -n1 > /tmp/browserlab/S_process.log'})
+        self.R.command({'CMD':'sleep 5; top -b -n1 > /tmp/browserlab/R_process.log'})
+        self.A.command({'CMD':'sleep 5; top -b -n1 > /tmp/browserlab/A_process.log'})
+
+        self.R.command({'CMD':'ifconfig > /tmp/browserlab/R_ifconfig.log'})
         return
 
     def kill_all(self):
@@ -263,24 +275,27 @@ class Experiment:
         return
 
     def transfer_logs(self, run_number, comment):
-        self.S.command({'CMD': 'mkdir -p /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
-        self.S.command({'CMD':'cp /tmp/browserlab/*.log /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
-        self.S.command({'CMD':'cp /tmp/browserlab/*.pcap /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
+        self.S.command({'CMD': 'mkdir -p /home/browserlab/data/'+run_number+'_'+comment})
+        self.S.command({'CMD':'cp /tmp/browserlab/*.log /home/browserlab/data/'+run_number+'_'+comment})
+        self.S.command({'CMD':'cp /tmp/browserlab/*.pcap /home/browserlab/data/'+run_number+'_'+comment})
 
-        self.A.command({'CMD': 'mkdir -p /tmp/browserlab/'+str(run_number)+'_'+comment}) # instead of time use blocking resource to sync properly
-        self.A.command({'CMD':'cp /tmp/browserlab/*.log /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
-        self.A.command({'CMD':'cp /tmp/browserlab/*.pcap /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
+        self.A.command({'CMD': 'mkdir -p /tmp/browserlab/'+run_number+'_'+comment}) # instead of time use blocking resource to sync properly
+        self.A.command({'CMD':'cp /tmp/browserlab/*.log /tmp/browserlab/'+run_number+'_'+comment+'/'})
+        self.A.command({'CMD':'cp /tmp/browserlab/*.pcap /tmp/browserlab/'+run_number+'_'+comment+'/'})
 
-        self.A.command({'CMD':'sshpass -p '+ ROUTER_PASS +' scp '+ ROUTER_USER + '@' + ROUTER_ADDRESS_LOCAL + ':/tmp/browserlab/* /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
+        self.A.command({'CMD':'sshpass -p '+ ROUTER_PASS +' scp -o StrictHostKeyChecking=no '+ ROUTER_USER + '@' + ROUTER_ADDRESS_LOCAL + ':/tmp/browserlab/* /tmp/browserlab/'+run_number+'_'+comment+'/'})
 
         self.R.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
         self.R.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
         self.A.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
         self.A.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
-        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.pcap', 'SUDO':1})
-        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.log', 'SUDO':1})
+        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
+        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
 
-        # TODO gzip folder /tmp/browserlab/run_number and transfer it?
+        # TODO ftp upload /tmp/browserlab/run_number to server?
+        self.S.command({'CMD': 'chown -R browserlab.browserlab /home/browserlab/data/'+run_number+'_'+comment})
+        self.S.command({'CMD': 'chmod -R 777 /home/browserlab/data/'+run_number+'_'+comment})
+        self.A.command({'CMD': 'sshpass -p passw0rd scp -o StrictHostKeyChecking=no -r /tmp/browserlab/'+run_number+'_'+comment+' browserlab@riverside.noise.gatech.edu:data'})
 
         return
 
@@ -290,6 +305,7 @@ class Experiment:
         self.radiotap_dump()
         self.ping_all()
         comment = exp()
+        self.process_log()
         sleep_time = experiment_timeout + 2
         print '\nDEBUG: Sleep for ' + str(sleep_time) + 'seconds as experiment ' + comment + ' runs'
         time.sleep(sleep_time)
@@ -302,6 +318,7 @@ class Experiment:
         self.get_folder_name_from_server()
         self.tcpdump_all()
         self.radiotap_dump()
+        self.process_log()
         sleep_time = experiment_timeout + 2
         print '\nDEBUG: Sleep for ' + str(sleep_time) + 'seconds as experiment ' + comment + ' runs'
         time.sleep(sleep_time)
