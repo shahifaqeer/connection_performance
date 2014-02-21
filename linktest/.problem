@@ -1,4 +1,2 @@
-- tcpdump on router not working? during iperf RS test...
-- tcpdump on R should work also for tests between AS
-- tcpdump on A also not working for any probably because I have given interface as wlan0, instead use any to get wireline traffic
-
+-   uploads should be organized into folders based on user. can we use mac address
+    as foldername to create /home/browserlab/MACADDR/<run_num>_<comment> directory instead?
