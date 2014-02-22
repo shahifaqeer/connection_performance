@@ -11,7 +11,7 @@ import subprocess
 import shlex
 import subprocess
 import struct
-import fnctl
+import fcntl
 
 from constants import *
 
