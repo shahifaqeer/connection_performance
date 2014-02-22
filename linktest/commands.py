@@ -300,7 +300,7 @@ class Experiment:
         comment = exp()
         self.process_log()
         sleep_time = experiment_timeout + 2
-        print '\nDEBUG: Sleep for ' + str(sleep_time) + 'seconds as experiment ' + comment + ' runs'
+        print '\nDEBUG: Sleep for ' + str(sleep_time) + ' seconds as experiment ' + comment + ' runs'
         time.sleep(sleep_time)
         self.kill_all()
         self.transfer_logs(self.run_number, comment)
@@ -312,8 +312,8 @@ class Experiment:
         self.tcpdump_all()
         self.radiotap_dump()
         self.process_log()
-        sleep_time = experiment_timeout + 2
-        print '\nDEBUG: Sleep for ' + str(sleep_time) + 'seconds as experiment ' + comment + ' runs'
+        sleep_time = calibrate_timeout
+        print '\nDEBUG: Sleep for ' + str(sleep_time) + ' seconds as experiment ' + comment + ' runs'
         time.sleep(sleep_time)
         self.kill_all()
         self.transfer_logs(self.run_number, comment)

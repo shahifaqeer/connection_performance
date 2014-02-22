@@ -2,6 +2,8 @@ CONTROL_PORT = 12345
 MSG_SIZE = 1024
 
 experiment_timeout =  10
+#collect passive trace + tcpdump without active probe traffic for 2 mins
+calibrate_timeout = 120
 transfer_timeout =  experiment_timeout + 2
 ROUTER_ADDRESS_LOCAL = '192.168.1.1'
 ROUTER_USER = 'root'
