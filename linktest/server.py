@@ -3,11 +3,7 @@ from __future__ import division
 from datetime import datetime
 import socket
 import random
-import subprocess
-import threading
-import os
-import time
-
+import subpro
 CLIENT_ADDRESS = 'localhost'
 SERVER_ADDRESS = '130.207.97.240'
 ROUTER_ADDRESS = '50.167.212.31'
@@ -30,11 +26,11 @@ class SwitchFlag(threading.Thread):
 
 class Command(object):
     def __init__(self, cmd):
-        self.cmd = 'echo "hattorihanzo" | sudo -S ' + cmd
+        self.cmd = cmd
         self.process = None
         if not (os.path.exists('/tmp/browserlab/')):
             os.mkdir('/tmp/browserlab/')
-        self.fout = open('/tmp/browserlab/debug.log', 'w')
+        self.fout = open('/tmp/browserlab/debug.log', 'a+w')
 
 
     def run(self, timeout):
@@ -57,7 +53,7 @@ class Command(object):
         print self.process.returncode
 
     def debug(self):
-        now = datetime.now()
+        now = time.time()
         print str(now) +': '+ self.cmd
         self.fout.write(str(now) + ': ' + self.cmd + '\n')
 
@@ -68,6 +64,9 @@ def execute_command(msg):
         os.mkdir('/tmp/browserlab/')
 
     if 'CMD' in msg:
+        if 'SUDO' in msg:
+            if msg['SUDO'] == 1:
+                msg['CMD'] = 'echo "hattorihanzo" | sudo -S ' + msg['CMD']
         if 'TIMEOUT' in msg:
             Command(msg['CMD']).run(msg['TIMEOUT'])
         else:
