@@ -1,6 +1,6 @@
 #SERVER
 from __future__ import division
-
+from datetime import datetime
 import socket
 import random
 import subprocess
@@ -19,6 +19,7 @@ experiment_timeout = 10
 transfer_timeout = experiment_timeout + 2
 global BUSY
 
+
 class SwitchFlag(threading.Thread):
     def run(self):
         print 'B = 1'
@@ -29,8 +30,12 @@ class SwitchFlag(threading.Thread):
 
 class Command(object):
     def __init__(self, cmd):
-        self.cmd = cmd
+        self.cmd = 'echo "hattorihanzo" | sudo -S ' + cmd
         self.process = None
+        if not (os.path.exists('/tmp/browserlab/')):
+            os.mkdir('/tmp/browserlab/')
+        self.fout = open('/tmp/browserlab/debug.log', 'w')
+
 
     def run(self, timeout):
         def target():
@@ -42,6 +47,8 @@ class Command(object):
         thread = threading.Thread(target=target)
         thread.start()
 
+        self.debug()
+
         thread.join(timeout)
         if thread.is_alive():
             print 'Terminating process'
@@ -49,40 +56,26 @@ class Command(object):
             thread.join()
         print self.process.returncode
 
+    def debug(self):
+        now = datetime.now()
+        print str(now) +': '+ self.cmd
+        self.fout.write(str(now) + ': ' + self.cmd + '\n')
 
-CMD = {}
-TIMEOUT = {}
-
-CMD['tcpdump'] = Command('tcpdump -s 100 -i any -w /tmp/browserlab/S.pcap')
-CMD['fping'] = Command('fping '+ROUTER_ADDRESS+' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/ping_S.log')
-CMD['iperf_tcp_server'] = Command('iperf -s -i 0.5 >> /tmp/browserlab/AS_iperf_tcp_S.log')
-CMD['iperf_tcp_server_rev'] = Command('iperf -s -i 0.5 -t '+ str(experiment_timeout) +' --reverse >> /tmp/browserlab/SA_iperf_tcp_S.log')
-CMD['iperf_tcp_client'] = Command('iperf -c '+CLIENT_ADDRESS+' -i 0.5 -t ' + str(experiment_timeout) + ' >> /tmp/browserlab/SR_iperf_tcp_S.log')
-CMD['make_transfer_directory'] = Command('mkdir -p /home/sarthak/Desktop/logs/'+str(run_number))
-CMD['transfer_logs'] = Command('sleep '+str(transfer_timeout)+'; cp /tmp/browserlab/*.log /home/sarthak/Desktop/logs/'+str(run_number))
-CMD['transfer_pcaps'] = Command('sleep '+str(transfer_timeout)+'; cp /tmp/browserlab/*.pcap /home/sarthak/Desktop/logs/'+str(run_number))
-
-TIMEOUT['tcpdump'] = experiment_timeout + 1
-TIMEOUT['fping'] = experiment_timeout
-TIMEOUT['iperf_tcp_server'] = experiment_timeout
-TIMEOUT['iperf_tcp_server_rev'] = experiment_timeout
-TIMEOUT['iperf_tcp_client'] = experiment_timeout
-TIMEOUT['make_transfer_directory'] = experiment_timeout
-TIMEOUT['transfer_logs'] = experiment_timeout + 2
-TIMEOUT['transfer_pcaps'] = experiment_timeout + 2
 
 def execute_command(msg):
-# msg = ['tcpdump', 'fping', ... ]
-    B = SwitchFlag()
-    B.start()
 
     if not (os.path.exists('/tmp/browserlab/')):
         os.mkdir('/tmp/browserlab/')
 
-    for cmd_name in msg:
-        CMD[cmd_name].run(TIMEOUT[cmd_name])
-
-    return 0
+    if 'CMD' in msg:
+        if 'TIMEOUT' in msg:
+            Command(msg['CMD']).run(msg['TIMEOUT'])
+        else:
+            Command(msg['CMD']).run(100)
+        return 0
+    else:
+        print 'PROBLEM: no CMD in msg'
+        return -1
 
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -97,17 +90,12 @@ while 1:
     data = client.recv(size)
     if data:
         print data
-        print 'BUSY = ', BUSY
+        #print 'BUSY = ', BUSY
+        BUSY = 0
         client.send(str(BUSY)+','+str(run_number))
-        # not busy
-        if BUSY == 0:
-            msg = eval(data)
-            #msg = data.split(',')
-            print 'execute command ', msg
-            BUSY = 1
-            done = execute_command(msg)
-            run_number += 1
-            # start executing command here
-            # command should be non blocking
-            # after its over set BUSY = 0 automatically
-            print 'Done: ', done
+        msg = eval(data)
+        print 'execute command ', msg
+        done = execute_command(msg)
+        if 'START' in msg:
+            run_number += msg['START']
+        print 'Done: ', done
