@@ -36,7 +36,7 @@ class Command(object):
         self.process = None
         if not (os.path.exists('/tmp/browserlab/')):
             os.mkdir('/tmp/browserlab/')
-        self.fout = open('/tmp/browserlab/debug.log', 'a+w')
+        self.fout = open('/tmp/browserlab/S_debug.log', 'a+w')
 
     def run(self, timeout):
         def target():
@@ -77,6 +77,7 @@ def execute_command(msg):
     #    return tcpdump()
 
     if 'CMD' in msg:
+        print 'DEBUG: Started command: ' + msg['CMD'] + '\n'
         #if 'SUDO' in msg:
         #    if msg['SUDO'] == 1:
         #        msg['CMD'] = 'echo "hattorihanzo" | sudo -S ' + msg['CMD']
@@ -88,7 +89,8 @@ def execute_command(msg):
             else:
                 outfile = None
             pid = subprocess.call(msg['CMD'], stdout=outfile, shell=True)
-        return pid
+        print 'DEBUG: Finished command: ' + msg['CMD'] + '\n'
+        return 0
     else:
         print 'PROBLEM: no CMD in msg'
         return -1
@@ -109,9 +111,9 @@ while 1:
         #print 'BUSY = ', BUSY
         BUSY = 0
         msg = eval(data)
+        if 'START' in msg:
+            #instead of run number lets use time.time()
+            run_number = time.time()
+        client.send(str(BUSY)+','+str(run_number)+','+str(0))
         print 'execute command ', msg
         pid = execute_command(msg)
-        client.send(str(BUSY)+','+str(run_number)+','+str(pid))
-        if 'START' in msg:
-            run_number += msg['START']
-        print 'PID: ', pid
