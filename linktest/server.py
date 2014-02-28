@@ -3,7 +3,11 @@ from __future__ import division
 from datetime import datetime
 import socket
 import random
-import subpro
+import subprocess
+import threading
+import os
+import time
+
 CLIENT_ADDRESS = 'localhost'
 SERVER_ADDRESS = '130.207.97.240'
 ROUTER_ADDRESS = '50.167.212.31'
@@ -15,7 +19,7 @@ experiment_timeout = 10
 transfer_timeout = experiment_timeout + 2
 global BUSY
 
-
+'''
 class SwitchFlag(threading.Thread):
     def run(self):
         print 'B = 1'
@@ -23,6 +27,8 @@ class SwitchFlag(threading.Thread):
         time.sleep(experiment_timeout + 5)
         print 'B = 0'
         BUSY = 0
+'''
+
 
 class Command(object):
     def __init__(self, cmd):
@@ -31,7 +37,6 @@ class Command(object):
         if not (os.path.exists('/tmp/browserlab/')):
             os.mkdir('/tmp/browserlab/')
         self.fout = open('/tmp/browserlab/debug.log', 'a+w')
-
 
     def run(self, timeout):
         def target():
@@ -57,21 +62,33 @@ class Command(object):
         print str(now) +': '+ self.cmd
         self.fout.write(str(now) + ': ' + self.cmd + '\n')
 
+#def tcpdump():
+#    return subprocess.call('tcpdump -i any -w /tmp/browserlab/S.pcap -G 10 &', shell=True)
+
+#def fping():
+#    return subprocess.call('tcpdump -i any -w /tmp/browserlab/S.pcap -G 10 &', shell=True)
 
 def execute_command(msg):
 
     if not (os.path.exists('/tmp/browserlab/')):
         os.mkdir('/tmp/browserlab/')
 
+    #if msg == 'tcpdump':
+    #    return tcpdump()
+
     if 'CMD' in msg:
-        if 'SUDO' in msg:
-            if msg['SUDO'] == 1:
-                msg['CMD'] = 'echo "hattorihanzo" | sudo -S ' + msg['CMD']
+        #if 'SUDO' in msg:
+        #    if msg['SUDO'] == 1:
+        #        msg['CMD'] = 'echo "hattorihanzo" | sudo -S ' + msg['CMD']
         if 'TIMEOUT' in msg:
-            Command(msg['CMD']).run(msg['TIMEOUT'])
+            pid = Command(msg['CMD']).run(msg['TIMEOUT'])
         else:
-            Command(msg['CMD']).run(100)
-        return 0
+            if 'STDOUT' in msg:
+                outfile = msg['STDOUT']
+            else:
+                outfile = None
+            pid = subprocess.call(msg['CMD'], stdout=outfile, shell=True)
+        return pid
     else:
         print 'PROBLEM: no CMD in msg'
         return -1
@@ -91,10 +108,10 @@ while 1:
         print data
         #print 'BUSY = ', BUSY
         BUSY = 0
-        client.send(str(BUSY)+','+str(run_number))
         msg = eval(data)
         print 'execute command ', msg
-        done = execute_command(msg)
+        pid = execute_command(msg)
+        client.send(str(BUSY)+','+str(run_number)+','+str(pid))
         if 'START' in msg:
             run_number += msg['START']
-        print 'Done: ', done
+        print 'PID: ', pid

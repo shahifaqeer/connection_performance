@@ -27,6 +27,8 @@ ROUTER_PASS = 'bismark123'
 ROUTER_ADDRESS_GLOBAL =  '50.167.212.31'
 SERVER_ADDRESS = '130.207.97.240'
 CLIENT_ADDRESS = '192.168.1.153'
+CLIENT_WIRELESS_INTERFACE_NAME = 'wlan0'
+ROUTER_WIRELESS_INTERFACE_NAME = 'wlan0'
 
 # client commands
 class Command(object):
@@ -84,7 +86,7 @@ class Router:
         self.router = ROUTER_ADDRESS_LOCAL
         self.host = self.connectHost(ip, user, passwd)
         self.remoteCommand('mkdir -p /tmp/browserlab/')
-        self.initialize_servers()
+        #self.initialize_servers()
 
     def connectHost(self, ip, user, passwd):
         host = paramiko.SSHClient()
@@ -137,6 +139,38 @@ class Client:
         logcmd(cmd['CMD'], self.name, self.logfile)
         return
 
+    def fping(self, list_of_IPs=None):
+        if list_of_IPs is None:
+            y = ROUTER_ADDRESS_LOCAL+' '+ SERVER_ADDRESS
+        else:
+            y = ''
+            for x in list_of_IPs:
+                y = y + x + ' '
+        self.command({'CMD':'fping '+ y +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_A.log',
+                   'TIMEOUT': experiment_timeout})
+        return
+
+    def tcpdump(self):
+        return
+
+    def radiotapdump(self):
+        return
+
+    def iperf_tcp_server(self):
+        return
+
+    def iperf_tcp_client(self):
+        return
+
+    def iperf_tcp_client_reverse(self):
+        return
+
+    def killall(self):
+        return
+
+    def transfer_logs(self):
+        return
+
 
 class Server:
     def __init__(self, ip):
@@ -153,9 +187,9 @@ class Server:
         response = s.recv(MSG_SIZE)
         print 'RECEIVED ', response
         s.close()
-        res, run_num = response.split(',')
+        res, run_num, pid = response.split(',')
         logcmd(msg, self.name, self.logfile)
-        return int(res), int(run_num)
+        return int(res), int(run_num), pid
 
 
 class Devices:
@@ -177,98 +211,147 @@ def test_cmd(dev, cmd):
     return
 
 
-def create_monitor_interface(device_list):
-    for dev in device_list:
-        dev.command({'CMD': 'iw dev wlan0 interface add mon0 type monitor flags none'})
-        dev.command({'CMD': 'ifconfig mon0 up'})
-    return 0
 
-def radiotap_dump(device_list):
-    for dev in device_list:
-        dev.command({'CMD':'tcpdump -i mon0 -s 65000 -p -U -w /tmp/fishing.dump - G' + str(experiment_timeout), 'TIMEOUT':experiment_timeout})
-
-def pings_and_tcpdump(server, router, client):
-    # server pings
-    #run_number is the folder number
-    s, run_number = server.command({'CMD':'fping '+ROUTER_ADDRESS_GLOBAL+' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_S.log',
-                                   'TIMEOUT': experiment_timeout, 'START':1, 'SUDO':1})
-    # server tcpdump
-    server.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/S.pcap -G 10', 'TIMEOUT':experiment_timeout, 'SUDO':1})
-    #client pings
-    client.command({'CMD':'fping '+ROUTER_ADDRESS_LOCAL+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_A.log',
-                   'TIMEOUT': experiment_timeout})
-    #client tcpdump
-    client.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/A.pcap', 'TIMEOUT':experiment_timeout})
-    #router pings
-    router.command({'CMD':'fping '+CLIENT_ADDRESS+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_R.log &'})
-    #router tcpdump
-    router.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/R.pcap &'})
-    return run_number
-
-def kill_and_transfer(server, router, client, run_number):
-    server.command({'CMD':'killall fping', 'SUDO': 1}) #should be done with pid instead
-    server.command({'CMD':'killall tcpdump', 'SUDO': 1})
-    server.command({'CMD': 'mkdir -p /home/sarthak/Desktop/logs/'+str(run_number)})
-    server.command({'CMD':'cp /tmp/browserlab/*.log /home/sarthak/Desktop/logs/'+str(run_number)})
-    server.command({'CMD':'cp /tmp/browserlab/*.pcap /home/sarthak/Desktop/logs/'+str(run_number)})
-
-    client.command({'CMD':'killall fping'}) #should be done with pid instead
-    client.command({'CMD':'killall tcpdump'})
-    client.command({'CMD': 'mkdir -p /tmp/browserlab/'+str(run_number)}) # instead of time use blocking resource to sync properly
-    client.command({'CMD':'cp /tmp/browserlab/*.log /tmp/browserlab/'+str(run_number)+'/'})
-    client.command({'CMD':'cp /tmp/browserlab/*.pcap /tmp/browserlab/'+str(run_number)+'/'})
-
-    router.command({'CMD':'killall fping'}) #should be done with pid instead
-    router.command({'CMD':'killall tcpdump'})
-    # transfer logs - should be blocking call after killing etc.
-    client.command({'CMD':'sshpass -p '+ ROUTER_PASS +' scp '+ ROUTER_USER + '@' + ROUTER_ADDRESS_LOCAL + ':/tmp/browserlab/* /tmp/browserlab/'+str(run_number)+'/'})
-
-    print 'DONE. sleep for 5 sec and remove logs'
-    time.sleep(5)
-    router.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
-    router.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
-    client.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
-    client.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
-    server.command({'CMD':'rm -rf /tmp/browserlab/*.pcap', 'SUDO':1})
-    server.command({'CMD':'rm -rf /tmp/browserlab/*.log', 'SUDO':1})
-    return 0
-
-
-# experiments
-def no_traffic():
+def experiment(S,R,C, exp):
     print "only fpings no traffic for 10 sec"
-    run_number = pings_and_tcpdump(R)
+    run_number = pings_and_tcpdump(S,R,C)
+    radiotap_dump([R,C])
+    # run experiment here
+    experiment_comment = exp()
+
     print 'wait for 12 sec for completion else send kill'
     time.sleep(experiment_timeout+2)
-    kill_and_transfer(R, run_number)
+    kill_and_transfer(S,R,C, run_number, experiment_comment)
     return 0
 
-def iperf_tcp_up(R):
-    print "only fpings no traffic for 10 sec"
-    run_number = pings_and_tcpdump(R)
-    # TODO start traffic here
-    print 'wait for 12 sec for completion else send kill'
-    time.sleep(experiment_timeout+2)
-    kill_and_transfer(R, run_number)
+
+class Experiment:
+    def __init__:
+        self.A = Client(CLIENT_ADDRESS)
+        self.R = Router(ROUTER_ADDRESS_LOCAL, ROUTER_USER, ROUTER_PASS)
+        self.S = Server(SERVER_ADDRESS)
+        self.device_list = [self.A, self.R, self.S]
+        self.run_number = 0
+
+    def create_monitor_interface(self):
+        self.A.command({'CMD': 'iw dev '+ CLIENT_WIRELESS_INTERFACE_NAME +' interface add mon0 type monitor flags none'})
+        self.R.command({'CMD': 'iw dev '+ ROUTER_WIRELESS_INTERFACE_NAME +' interface add mon0 type monitor flags none'})
+        self.A.command({'CMD': 'ifconfig mon0 up'})
+        self.R.command({'CMD': 'ifconfig mon0 up'})
+        return 0
+
+    def radiotap_dump(self):
+        self.create_monitor_interface()
+        self.A.command({'CMD':'tcpdump -i mon0 -s 65000 -p -U -w /tmp/fishing.dump - G' + str(experiment_timeout), 'TIMEOUT':experiment_timeout})
+        self.R.command({'CMD':'tcpdump -i mon0 -s 65000 -p -U -w /tmp/fishing.dump - G' + str(experiment_timeout), 'TIMEOUT':experiment_timeout})
+
+    def ping_all(self):
+        s, run_number, pid = self.S.command({'CMD':'fping '+ROUTER_ADDRESS_GLOBAL+' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_S.log',
+                                    'TIMEOUT': experiment_timeout, 'START':1, 'SUDO':1})
+        self.run_number = run_number
+
+        self.A.command({'CMD':'fping '+ROUTER_ADDRESS_LOCAL+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_A.log',
+                    'TIMEOUT': experiment_timeout})
+        self.R.command({'CMD':'fping '+CLIENT_ADDRESS+' '+ SERVER_ADDRESS +' -p 100 -c '+ str(experiment_timeout * 10) + ' -r 1 -A >> /tmp/browserlab/fping_R.log &'})
+        return
+
+    def tcpdump_all(self):
+        self.S.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/S.pcap -G 10', 'TIMEOUT':experiment_timeout, 'SUDO':1})
+        self.A.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/A.pcap', 'TIMEOUT':experiment_timeout})
+        self.R.command({'CMD':'tcpdump -s 100 -i any -w /tmp/browserlab/R.pcap &'})
+        return
+
+    def kill_all(self)
+        self.S.command({'CMD':'killall fping', 'SUDO': 1}) #should be done with pid instead
+        self.S.command({'CMD':'killall tcpdump', 'SUDO': 1})
+        self.S.command({'CMD':'killall iperf', 'SUDO': 1})
+
+        self.A.command({'CMD':'killall fping'}) #should be done with pid instead
+        self.A.command({'CMD':'killall tcpdump'})
+        self.A.command({'CMD':'killall iperf'})
+
+        self.R.command({'CMD':'killall fping'}) #should be done with pid instead
+        self.R.command({'CMD':'killall tcpdump'})
+        self.R.command({'CMD':'killall iperf'})
+        return
+
+    def transfer_logs(self, run_number, comment):
+        self.S.command({'CMD': 'mkdir -p /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
+        self.S.command({'CMD':'cp /tmp/browserlab/*.log /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
+        self.S.command({'CMD':'cp /tmp/browserlab/*.pcap /home/sarthak/Desktop/logs/'+str(run_number)+'_'+comment})
+
+        self.A.command({'CMD': 'mkdir -p /tmp/browserlab/'+str(run_number)+'_'+comment}) # instead of time use blocking resource to sync properly
+        self.A.command({'CMD':'cp /tmp/browserlab/*.log /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
+        self.A.command({'CMD':'cp /tmp/browserlab/*.pcap /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
+
+        self.A.command({'CMD':'sshpass -p '+ ROUTER_PASS +' scp '+ ROUTER_USER + '@' + ROUTER_ADDRESS_LOCAL + ':/tmp/browserlab/* /tmp/browserlab/'+str(run_number)+'_'+comment+'/'})
+
+        self.R.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
+        self.R.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
+        self.A.command({'CMD':'rm -rf /tmp/browserlab/*.pcap'})
+        self.A.command({'CMD':'rm -rf /tmp/browserlab/*.log'})
+        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.pcap', 'SUDO':1})
+        self.S.command({'CMD':'rm -rf /tmp/browserlab/*.log', 'SUDO':1})
+
+        # TODO gzip folder /tmp/browserlab/run_number and transfer it?
+
+        return
+
+    def run_experiment(self, exp):
+        self.ping_all()
+        self.tcpdump_all()
+
+        comment = exp()
+
+        time.sleep(experiment_timeout+2)
+        self.kill_all()
+        self.transfer_logs(self.run_number, comment)
+        return
+
+    # EXPERIMENTS
+    # passed as args into run_experiment()
+    def no_traffic(self):
+        return 'no_tra'
+
+    def iperf_tcp_up_AR(self):
+        self.R.command('iperf -s -y C >> /tmp/browserlab/iperf_AR_R.log &')
+        self.A.command('iperf -c ' + ROUTER_ADDRESS_LOCAL + ' -y C -i 0.5 >> /tmp/browserlab/iperf_AR_A.log &')
+        return 'AR_tcp'
     return 0
 
-def iperf_tcp_dw(R):
-    print "only fpings no traffic for 10 sec"
-    run_number = pings_and_tcpdump(R)
-    # TODO start traffic here
-    print 'wait for 12 sec for completion else send kill'
-    time.sleep(experiment_timeout+2)
-    kill_and_transfer(R, run_number)
-    return 0
+    def iperf_tcp_dw_RA(self):
+        A.command('iperf -s -y C >> /tmp/browserlab/iperf_RA_A.log &')
+        R.command('iperf -c ' + CLIENT_ADDRESS + ' -y C -i 0.5 >> /tmp/browserlab/iperf_RA_R.log &')
+        return 'RA_tcp'
 
-def iperf_tcp_up(R):
-    return 0
+    def iperf_tcp_up_RS(self):
+        S.command('iperf -s -y C >> /tmp/browserlab/iperf_RS_S.log &')
+        R.command('iperf -c ' + SERVER_ADDRESS + ' -y C -i 0.5 >> /tmp/browserlab/iperf_AR_A.log &')
+        return 'RS_tcp'
 
-def iperf_tcp_dw(R):
-    return 0
+    def iperf_tcp_dw_SR(self):
+        A.command('iperf -s -y C >> /tmp/browserlab/iperf_RA_A.log &')
+        A.command('iperf -c ' + CLIENT_ADDRESS + ' -y C -i 0.5 >> /tmp/browserlab/iperf_RA_R.log &')
+        return 'SR_tcp'
 
-def udpprobe_up(R):
-    return 0
+    def iperf_tcp_up_AS(S,R,C):
+        R.command('iperf -s -y C >> /tmp/browserlab/iperf_AR_R.log &')
+        A.command('iperf -c ' + ROUTER_ADDRESS_LOCAL + ' -y C -i 0.5 >> /tmp/browserlab/iperf_AR_A.log &')
+        return 'AS_tcp'
 
-def udpprobe_dw(R):
-    return 0
+    def iperf_tcp_dw_SA(S,R,C):
+        A.command('iperf -s -y C >> /tmp/browserlab/iperf_RA_A.log &')
+        A.command('iperf -c ' + CLIENT_ADDRESS + ' -y C -i 0.5 >> /tmp/browserlab/iperf_RA_R.log &')
+        return 'SA_tcp'
+
+    # udpprobe gives both up and dw
+    def probe_udp_AR(S,R,C):
+        R.command('iperf -s -y C >> /tmp/browserlab/iperf_AR_R.log &')
+        A.command('iperf -c ' + ROUTER_ADDRESS_LOCAL + ' -y C -i 0.5 >> /tmp/browserlab/iperf_AR_A.log &')
+    return 'AR_udp'
+
+    def probe_udp_RS(S,R,C):
+    return 'RS_udp'
+
+    def probe_udp_AS(S,R,C):
+    return 'AS_udp'
