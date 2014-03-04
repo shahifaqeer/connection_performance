@@ -37,4 +37,4 @@ tc qdisc replace dev $interface parent 1:1 handle 11: tbf rate $down_rate"mbps" 
 #                              not ssh       ssh                           traffic
 #
 #*****
-
+tc -s qdisc ls dev $interface
