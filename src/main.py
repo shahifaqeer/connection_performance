@@ -300,16 +300,19 @@ def TCPLatencyTest(mts, rate, num_of_rounds=1):
 
   return mts
 
-def runTCPLatTest(rate):
+def runTCPLatTest(rate, buffersize):
   mts = MyTestSuite()
+  buffersize = str(buffersize) #in kb
 
   if rate != 0:
     rate = str(rate)
-    mts.Q.remoteCommand('sh ratelimit2.sh eth0 '+rate+'mbit '+rate+'mbit')
-    mts.R.remoteCommand('sh ratelimit2.sh eth1 '+rate+'mbit '+rate+'mbit')
+    mts.Q.remoteCommand('sh ratelimit2.sh eth0 '+rate+' '+rate+' '+buffersize)
+    mts.Q.remoteCommand('sh ratelimit2.sh eth1 '+rate+' '+rate+' '+buffersize)
+    #mts.R.remoteCommand('sh ratelimit2.sh eth1 '+rate+'mbit '+rate+'mbit')
   else:
     mts.Q.remoteCommand('tc qdisc del dev eth0 root')
-    mts.R.remoteCommand('tc qdisc del dev eth1 root')
+    mts.Q.remoteCommand('tc qdisc del dev eth1 root')
+    #mts.R.remoteCommand('tc qdisc del dev eth1 root')
 
   mts2 = TCPLatencyTest(mts, rate)
   mts2.stop_n_clear()
