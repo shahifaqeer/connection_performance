@@ -151,25 +151,23 @@ def UDPBWTests(ctr_udp):
   return mts
 
 
-def UDPProbeTests(ctr_udp=1):
-  mts = MyTestSuite()
-  time_sleep = 10.0
+def UDPProbeTests(mts, rate, ctr_udp=1):
+  rate = str(rate)
+  time_notraffic = 10.0
+
   for k in range(ctr_udp):
     print "ROUND ", k
     for remoteclient in [mts.A, mts.B, mts.C, mts.R, mts.S]:
       for remoteserver in [mts.A, mts.B, mts.C, mts.R, mts.S]:
         if remoteserver != remoteclient:
-          print (remoteclient.name + ' to ' + remoteserver.name)
-          mts.R.tcpDump('R_'+remoteclient.name+remoteserver.name+'.pcap')
+          des =  'udp_'+remoteclient.name+'_'+remoteserver.name+'_'+rate
+          print k, des
+          startARound(mts, k, des, remoteclient, remoteserver)
           mts.startAllPings()
-          print 'start test'
           remoteclient.UDPProbeTest(remoteserver)
-          print 'done test'
-          print 'no traffic for 10 secs'
           time.sleep(time_sleep)
-          print 'done: stop all process and transfer logs'
           mts.stopAllPings()
-          mts.R.remoteCommand('killall tcpdump')
+          endARound(mts, k, des, des, remoteclient, remoteserver)
           # transfer logs
           mts.transferLogs('traffic_'+remoteclient.name+remoteserver.name)
   return mts
@@ -243,11 +241,12 @@ def runTrafficLatTest(rate):
 
 def startARound(mts, round_num, scenario=None, remoteclient=None, remoteserver=None):
   mts.startAllPings(0.100)
-  mts.R.tcpDump('R.pcap')
-  if scenario is not None:
-    #tcp dump on remoteclient and remoteserver too
-    remoteclient.tcpDump(remoteclient.name+'.pcap')
-    remoteserver.tcpDump(remoteserver.name+'.pcap')
+  mts.R.tcpDump('tcpdump_R.pcap')
+  remoteclient.tcpDump('tcpdump_'+remoteclient.name+'.pcap')
+  remoteserver.tcpDump('tcpdump_'+remoteserver.name+'.pcap')
+  mts.R.radiotapDump('radiotap_R.pcap')
+  remoteclient.radiotapDump('radiotap_'+remoteclient.name+'.pcap')
+  remoteserver.radiotapDump('radiotap_'+remoteserver.name+'.pcap')
   mts.wirelessQualityLog()
   return
 
@@ -255,9 +254,8 @@ def endARound(mts, round_num, description, scenario=None, remoteclient=None, rem
   time_wait = 5.0
   mts.stopAllPings()
   mts.R.remoteCommand('killall tcpdump')
-  if scenario is not None:
-    remoteclient.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
-    remoteserver.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+  remoteclient.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
+  remoteserver.remoteCommand('echo "gtnoise" | sudo -S killall tcpdump')
   mts.transferLogs(description)
   #wait for 5 seconds due to transfers before next round begins
   time.sleep(time_wait)
@@ -300,7 +298,7 @@ def TCPLatencyTest(mts, rate, num_of_rounds=1):
 
   return mts
 
-def runTCPLatTest(rate):
+def runBWTest(rate):
   mts = MyTestSuite()
   #buffersize = str(buffersize) #in kb
 
@@ -319,5 +317,9 @@ def runTCPLatTest(rate):
   mts2 = TCPLatencyTest(mts, rate)
   mts2.stop_n_clear()
   mts2.closeAllHosts()
+
+  mts3 = UDPProbeTests(mts, rate)
+  mts3.stop_n_clear()
+  mts3.closeAllHosts()
 
   return

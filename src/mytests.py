@@ -101,10 +101,9 @@ class MyTestSuite():
     return
 
   def wirelessQualityLog(self):
-    for remoteclient in [self.B, self.A]:
-      remoteclient.remoteCommand('for i in {1..10}; do /sbin/iwconfig wlan0>>testlogs/'+remoteclient.name+'_iwconfig.log; sleep 0.2; done &')
-    remoteclient = self.R
-    remoteclient.remoteCommand('for i in $(seq 10); do iw dev wlan0 station dump>>testlogs/'+remoteclient.name+'_iwconfig.log; sleep 1; done &')
+    for remoteclient in [self.R, self.B, self.A]:
+      remoteclient.remoteCommand('for i in {1..50}; do /sbin/iw dev wlan0 station dump >>testlogs/'+remoteclient.name+'_iwdev.log; sleep 0.2; done &')
+      remoteclient.command('for i in {1..50}; do top -b -n1 >> /testlogs/'+remoteclient.name+'_top.log; sleep 0.2; done &'})
     return
 
   def transferLogs(self, description):

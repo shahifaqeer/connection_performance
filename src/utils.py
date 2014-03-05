@@ -19,6 +19,7 @@ class RemoteHost:
 
     self.host = self.connectHost(ip, user, passwd)
 
+    self.create_mon_interface()
     self.fileout = open('testlogs/logcmd.log', 'a+w')
 
   def connectHost(self, ip, user, passwd):
@@ -56,6 +57,11 @@ class RemoteHost:
 
     self.logcmd(cmd)
     return
+
+  def create_mon_interface(self):
+    if self.name in ['A', 'B', 'R']:
+      self.remoteCommand('echo "gtnoise" | sudo -S iw dev wlan0 interface add wlan0mon type monitor flags none')
+      self.remoteCommand('echo "gtnoise" | sudo -S ifconfig wlan0mon up')
 
   def startPingAll(self, interval=1):
     if interval < 0.200:
@@ -179,9 +185,22 @@ class RemoteHost:
 
   def tcpDump(self, logfilename):
     if self.name == 'R':
-      cmd = 'tcpdump -s 100 -i any -w tcpdump/'+logfilename
+      cmd = 'tcpdump -s 100 -i wlan0 -w tcpdump/'+logfilename
+    elif self.name == 'A' or self.name == 'B':
+      cmd = 'echo "gtnoise" | sudo -S tcpdump -s 100 -i wlan0 -w tcpdump/'+logfilename
     else:
       cmd = 'echo "gtnoise" | sudo -S tcpdump -s 100 -i any -w tcpdump/'+logfilename
+    self.host.exec_command(cmd)
+    self.logcmd(cmd)
+    return
+
+  def radiotapDump(self, logfilename):
+    if self.name == 'R':
+      cmd = 'tcpdump -s 0 -i wlan0mon -p -U -w tcpdump/'+logfilename
+    elif self.name == 'A' or self.name == 'B':
+      cmd = 'echo "gtnoise" | sudo -S tcpdump -s 0 -i wlan0mon -p -U -w tcpdump/'+logfilename
+    else:
+      return
     self.host.exec_command(cmd)
     self.logcmd(cmd)
     return
